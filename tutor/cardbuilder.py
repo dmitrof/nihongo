@@ -22,8 +22,10 @@ class CardBuilder:
     def singlekanji(self, params, cardside):
         card_side = {}
         card_side['cardside'] = cardside
-        card_side['item_type'] = "singlekanji"
-        card_side['bigkanji'] = params['bigkanji']
+
+        #ind = 'bigkanji_' + cardside
+        card_side['bigkanji'] = params['bigkanji_' + cardside]
+
         return card_side
 
     def kanjifront(self, params, cardside):

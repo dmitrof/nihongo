@@ -182,7 +182,7 @@ class Edit_Card(View):
             info_dict[info] = card_info.get(info)
         template_dict['card_info'] = info_dict
         template_dict['available_pages'] = availablePages
-        sides_set = {}
+        sides_list= []
         for side in card_sides:
             side_dict = {}
             sides_number += 1
@@ -193,8 +193,11 @@ class Edit_Card(View):
                 side_dict[key] = value
             #side_dict['cardside'] += str((int(side_dict['cardside']) + 1))
             #side_dict['cardside'] += 1
-            sides_set[side.get('item_type')] = side_dict
-            template_dict[side.get('item_type')] = side_dict
+
+            side_dict['page_name'] = 'tutor/' + side.get('item_type') + '.html'
+            sides_list.append(side_dict)
+
+            #template_dict[side.get('item_type')] = side_dict
             page = {}
             page['pageName'] = 'tutor/' + side.get('item_type') + '.html'
             page['cardside'] = side.get('cardside')
@@ -204,7 +207,7 @@ class Edit_Card(View):
 
         print(pages)
 
-        template_dict['sides_set'] = sides_set
+        template_dict['sides_list'] = sides_list
         template_dict['sides_number'] = sides_number
         template_dict['card'] = card
         template_dict['card_id'] = card_id

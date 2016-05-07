@@ -17,6 +17,7 @@
 .side_select {
     margin-top:30px;
     margin-bottom:30px;
+    margin-left:10px;
 }
 
 /*#singlekanji_edit, #kanjifront_edit, #kanjiback_edit > div {
@@ -25,9 +26,15 @@
 
 }*/
 
+.edit_item {
+    margin-top:10px;
+    margin-bottom:10px;
+    border : 2px solid black;
+}
+
 .edit_item > div {
     padding: 15px;
-    border: 2px solid black;
+
 
 }
 

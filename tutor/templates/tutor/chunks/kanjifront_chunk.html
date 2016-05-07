@@ -13,7 +13,7 @@
             <table class="words">
             </table>
         </div>
-        <div class="sideinfo">{{kanjifront.cardside|add:1}}/{{sides_number}}</div>
+        <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
         <div class="level">{{card_info.lvl}}</div>
         {% comment %}
 
@@ -34,7 +34,7 @@
 
         <br>
         <label>Кандзи</label>
-        <input type="hidden" name="pages[]" value="kanjifront_{{kanjifront.cardside}}"/>
+        <input type="hidden" name="pages[]" value="kanjifront_{{side.cardside}}"/>
         <input type="text" name="kanji" value="" class="kanji_edit"/><br>
 
         <label>Kun</label>

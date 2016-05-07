@@ -1,8 +1,8 @@
 <div id="edit_{{chunk_id}}" class="edit_item">
     <!--<div data-role="header">Kanji card!</div>-->
     <div class="singlekanji_template">
-        <div class="bigkanji"></div>
-        <div class="sideinfo">{{singlekanji.cardside|add:1}}/{{sides_number}}</div>
+        <div class="bigkanji" id="bigkanji_{{side.cardside}}"></div>
+        <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
         <div class="level">{{card_info.lvl}}</div>
         <br>
        <!-- <a id="prevcard"   class="ui-btn ui-corner-all ui-btn-inline">previous </a>        <a id="nextcard"   class="ui-btn ui-corner-all ui-btn-inline">next </a>-->
@@ -17,9 +17,9 @@
     </select> <br>
     <div class="singlekanji_form">
         {% csrf_token %}
-        <input type="hidden" name="pages[]" value="singlekanji_{{singlekanji.cardside}}"/>
+        <input type="hidden" name="pages[]" value="singlekanji_{{side.cardside}}"/>
         <label for="bigkanji_edit">Кандзи</label>
-        <input type="text" name="bigkanji" value ="" id="bigkanji_edit"/><br>
+        <input type="text" name="bigkanji_{{side.cardside}}" value ="" id="bigkanji_edit"/><br>
         <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
 
     </div>

@@ -6,11 +6,17 @@
 <div id="edit_pane">
 <form class="card_form" action="" method="post">
     {% csrf_token %}
+    {% comment %}
 {% for page in pages %}
-    <ul> {{page.pageName}}</ul>
     {% include page.pageName %}
 {% endfor %}
-    <button type="button" name="add_side" class=".add_side_btn">Добавить сторону</button><br><br>
+    {% endcomment %}
+
+    {% for side in sides_list %}
+        {% include side.page_name %}
+    {% endfor %}
+
+    <br><button type="button" name="add_side" class=".add_side_btn">Добавить сторону</button><br><br>
     <input type="submit" name="edit_side" value="Подтвердить изменения"/>
 </form>
 <script src="{% static 'js/jquery-1.12.1.js' %}"></script>

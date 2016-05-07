@@ -11,7 +11,7 @@ $(document).ready(function() {
         //setTimeout(function() {alert($(this).val());}, 1);
         edit_id = ($(this).closest('.edit_item').attr('id'));
         //alert(edit_id)
-        $("#" + edit_id +" ." + $(this).attr('name')).html($(this).val());
+        $("#" + edit_id +" #" + $(this).attr('name')).html($(this).val());
     });
 
     //$("edit_pane").on('keyup')
@@ -58,6 +58,8 @@ $(document).ready(function() {
         //alert("delete");
 
         var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
+        cardside = side_id.match(/\d+/)[0];
+        //alert(cardside);
         var field_id = $(this).parent().attr('id');
         var word_edit_item = $(this).parent()
         field_id = field_id.replace("edit_", "field_");
@@ -69,10 +71,14 @@ $(document).ready(function() {
         word_field_item = $("#" + field_id);
         $(word_edit_item).remove();
         $(word_field_item).remove();
-        var words_num = $(side_id + " input[name='words_num']").val();
+        var input_name = 'words_num_' + cardside;
+        var words_num = $(side_id + " input[name=" + input_name + "]").val();
+        //alert(words_num)
         words_num--;
-        $(side_id + " input[name='words_num']").val(words_num);
 
+        //alert($(side_id + " input[name=" + input_name + "]").val());
+        $(side_id + " input[name=" + input_name + "]").val(words_num);
+        //alert($(side_id + " input[name=" + input_name + "]").val());
 
         var delNum = field_id.match(/\d+/)[0];
         var wordEdits = $(side_id +  " .word_item_edit").toArray();
