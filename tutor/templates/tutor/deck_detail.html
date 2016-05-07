@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<body>
+<h3>Стопка "{{deck.description}}"</h3>
+    {% for card in cards_set %}
+    <ul>{{card}}</ul>
+    <form name="delete_card" method="post" action="{% url 'tutor:delete_card_from_deck' deck_id %}">
+        {% csrf_token %}
+    <input type = "hidden" name="card_id" value={{card.key}} />
+    <input type="submit" name="delete_card" value="Удалить из стопки" />
+        <input type="submit" name="edit_card" value="Редактировать карточку" />
+    </form>
+
+{% endfor %}
+
+</body>

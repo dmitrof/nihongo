@@ -1,0 +1,92 @@
+<div id="kanjifront_edit_{{kanjifront.cardside}}" class="edit_item">
+
+    <div class="kanjifront_template">
+
+        <div class="cardside_content">
+
+            <div class="kanji">{{kanjifront.kanji}}</div>
+            <div class="kanas">
+                <div class="kuns">
+                    {% for kun in kanjifront.kun %}
+                        {% comment %}<div class='kun'>{{kun}},  </div> {% endcomment %}
+                        {{kun}},
+                    {% endfor %}
+                </div>
+                <div class="ons">
+                    {% for on in kanjifront.on%}
+                        {% comment %}<div class='on'>{{on}},  </div> {% endcomment %}
+                        {{on}},
+                    {% endfor %}
+
+                </div>
+            </div>
+            <br>
+            <table class="words">
+
+                {% for wordItem in kanjifront.words %}
+                    <tr class="word_item_field" id="word_item_field_{{forloop.counter}}"><td class='word'> {{forloop.counter}}) {{wordItem.word}} </td>
+                        <td class='word_kun' > {{wordItem.word_kun}} </td>
+                    </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+
+        <div class="sideinfo">{{kanjifront.cardside|add:1}}/{{sides_number}}</div>
+        <div class="level">{{card_info.lvl}}</div>
+        {% comment %}
+
+        {% endcomment %}
+        <br>
+
+    </div>
+
+    <select class="side_select">
+        {% for t_page, text in available_pages.items %}
+            <option value="{{t_page}}" {% if t_page == "kanjifront" %}selected="selected"{% endif %}>
+
+                {{text}}
+            </option>
+        {% endfor %}
+    </select>
+    <div class="kanjifront_form">
+
+        <br>
+        <label for="kanji_edit">Кандзи</label>
+        <input type="hidden" name="kanjifront_cardside" value="{{kanjifront.cardside}}"/>
+        <input type="hidden" name="pages[]" value="kanjifront"/>
+        <input type="text" name="kanji" value="{{kanjifront.kanji}}" id="kanji_edit"/><br>
+
+        <label for="kun_edit">Kun</label>
+        <input type="text" name="kuns" value="{% for kun in kanjifront.kun %} {{kun}}, {%endfor%}" id="kun_edit"/><br>
+
+        <label for="on_edit">On</label>
+        <input type="text" name="ons" value="{% for on in kanjifront.on %} {{on}}, {%endfor%}" id="on_edit"/><br>
+
+        <div class="words_edit"> Слова-примеры <br>
+            <input type="hidden" name="words_num" value="{{kanjifront.words|length}}"/>
+            {% for wordItem in kanjifront.words %}
+                <div class="word_item_edit" id="word_item_edit_{{forloop.counter}}">
+                    <label >Слово</label>
+                    <input type="text" name="word[]" value="{{wordItem.word}}" class="word_edit" />
+                    <label >Написание</label>
+                    <input type="text" name="word_kun[]" value="{{wordItem.word_kun}}" class="word_kun_edit" />
+                    <button type="button" class="delete_word">Удалить слово</button>
+                </div>
+            {% endfor %}
+            <button type="button" class="add_word">Добавить слово</button>
+
+        </div>
+        {% comment %}
+        <label for="words_edit">Слова</label>
+        <input type="text" name="words" value="{{kanjifront.words}}" id="words_edit"/><br>
+        {% endcomment %}
+        <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
+    </div>
+
+
+</div>
+
+
+
+

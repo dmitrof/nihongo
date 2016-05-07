@@ -1,0 +1,209 @@
+
+
+.deck_menu_item {
+    margin: 20;
+}
+
+.singlekanji_template, .kanjifront_template, .kanjiback_template {
+
+    border: 1px solid black;
+    width: 320px;
+    height: 180px;
+    background-color: #efefef;
+    position:relative;
+    margin-bottom:20px;
+}
+
+.side_select {
+    margin-top:30px;
+    margin-bottom:30px;
+}
+
+/*#singlekanji_edit, #kanjifront_edit, #kanjiback_edit > div {
+    padding: 15px;
+    border: 2px solid black;
+
+}*/
+
+.edit_item > div {
+    padding: 15px;
+    border: 2px solid black;
+
+}
+
+input {
+    margin-bottom:5px;
+}
+
+.singlekanji_template {
+    vertical-align : center;
+    text-align : center;
+
+
+}
+
+.bigkanji {
+    font-size: 5vw;
+
+}
+
+.sideinfo {
+    position:absolute;
+    font-size: 12pt;
+    top:3%;
+    left:2%;
+}
+
+.level {
+    position:absolute;
+    font-size: 12pt;
+    top:87%;
+    left:91%;
+}
+
+.kanji {
+    position:relative;
+    text-align:center;
+    vertical-align:center;
+    float:left;
+    width:32%;
+    height: 50%;
+    font-size:34pt;
+    /*border: 1px solid black;*/
+}
+
+.kanas {
+    float:right;
+    position:relative;
+    width:67%;
+    height: 50%;
+    /*border: 1px solid black;*/
+}
+
+.word {
+    padding-left:1%;
+    width:35%;
+    /*border: 1px solid black;*/
+}
+.word_kun {
+    padding-left:1%;
+    width:65%;
+}
+
+div {
+
+
+}
+
+.kun {
+    display:inline-block;
+    margin-right : 0%;
+    margin-top: 3%;
+    font-size:14pt;
+
+}
+
+.on {
+    display:inline-block;
+    margin-right : 0%;
+    margin-top: 1%;
+     font-size:14pt;
+
+
+}
+
+/*.kun, .on {
+border: 1px solid black;
+}*/
+
+.kuns {
+    /*font-size:8vh;*/
+    padding-left:3%;
+    height: 50%;
+}
+
+.ons {
+
+    padding-left:3%;
+    height: 50%;
+}
+
+.words {
+    position:relative;
+    float:left;
+    font-size:12pt;
+    width:100%;
+    height: 44%;
+    vertical-align : center;
+
+
+}
+
+.cardside_content {
+
+    position : relative;
+    margin-top : 3%;
+    margin-left:2%;
+    /*border : 1px solid black;*/
+
+
+
+}
+
+.bigkanji {
+    font-size: 60pt;
+    vertical-align : center;
+    text-align : center;
+
+    position:absolute;
+    top: 25%;
+    left: 35%;
+    right: 50vw;
+    }
+
+.words_edit{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.word_edit{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+.word_kun_edit{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+/*.kanji {
+    position:absolute;
+    font-size: 45pt;
+    top:10%;
+    left:7%;
+}
+
+
+.kana {
+    position:absolute;
+    font-size: 20pt;
+    top:17%;
+    left:45%;
+}
+
+.words {
+    position:absolute;
+    font-size: 20pt;
+    top:60%;
+    left:7%;
+}
+
+.bigkanji {
+    font-size: 60pt;
+    vertical-align : center;
+    text-align : center;
+
+    position:absolute;
+    top: 25%;
+    left: 35%;
+    right: 50vw;
+*/
+
+

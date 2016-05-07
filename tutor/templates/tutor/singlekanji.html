@@ -1,0 +1,34 @@
+<div id="singlekanji_edit_{{singlekanji.cardside}}" class="edit_item">
+    <!--<div data-role="header">Kanji card!</div>-->
+    <div class="singlekanji_template">
+        <div class="bigkanji">{{singlekanji.bigkanji}}</div>
+        <div class="sideinfo">{{singlekanji.cardside|add:1}}/{{sides_number}}</div>
+        <div class="level">{{card_info.lvl}}</div>
+        <br>
+       <!-- <a id="prevcard"   class="ui-btn ui-corner-all ui-btn-inline">previous </a>        <a id="nextcard"   class="ui-btn ui-corner-all ui-btn-inline">next </a>-->
+    </div>
+
+    <select class="side_select">
+        {% for t_page, text in available_pages.items %}
+            <option value="{{t_page}}" {% if t_page == "singlekanji" %}selected="selected"{% endif %}>
+
+                {{text}}
+            </option>
+        {% endfor %}
+    </select> <br>
+    <div class="singlekanji_form">
+        {% csrf_token %}
+        <input type="hidden" name="singlekanji_cardside" value="{{singlekanji.cardside}}"/>
+        <input type="hidden" name="pages[]" value="singlekanji"/>
+        <label for="bigkanji_edit">Кандзи</label>
+        <input type="text" name="bigkanji" value ="{{singlekanji.bigkanji}}" id="bigkanji_edit"/><br>
+        <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
+
+    </div>
+</div>
+
+
+
+
+
+

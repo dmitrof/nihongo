@@ -1,0 +1,181 @@
+.bigkanji {
+    font-size: 40vh;
+    vertical-align : center;
+    text-align : center;
+    /*height:inherit;*/
+    position:fixed;
+    top: 25%;
+    left: 35%;
+    /*right: 50vw;*/
+
+}
+
+.menu_item {
+    border-bottom:2px solid #B0B0B0;
+    padding-top: 10px;
+    padding-bottom : 10px;
+}
+
+
+#decks_menu {
+    border-bottom: 3px solid gray;
+}
+.deck_length, .deck_description {
+    margin-left : 5vw;
+}
+
+.singlekanji {
+
+    width : 100%;
+    height : 100%;
+    margin: 0;
+    padding: 0;
+    vertical-align : center;
+    text-align : center;
+}
+
+.submit_answer{
+    position:relative;
+    margin-bottom:10vh;
+}
+
+.long_text {
+    position:relative;
+    margin-top:8vh;
+    margin-bottom:8vh;
+}
+
+.question {
+    position:relative;
+    margin-top:8vh;
+    margin-bottom:8vh;
+}
+
+.radio-option {
+    /*position:relative;
+    float:left;
+    margin-top:10vh;*/
+}
+
+.label-option {
+    /*position:relative;
+    float:right;
+    display:block;
+    clear:none;
+    background-color: #4b88b6;*/
+}
+
+.radio-option:focus {
+    background-color: #4b88b6;
+}
+
+
+
+
+.kanji {
+    position:relative;
+    text-align:center;
+    vertical-align:center;
+    float:left;
+    width:32%;
+    height: 50%;
+    font-size:34vh;
+}
+
+.kanas {
+    float:right;
+    position:relative;
+    width:67%;
+    height: 50%;
+}
+
+.word {
+    padding-left:1%;
+    width:25%;
+}
+.word_kun {
+    padding-left:1%;
+    width:75%;
+}
+
+.kun {
+    display:inline-block;
+    margin-right : 1%;
+    margin-top: 3vh;
+    font-size:8vh;
+}
+
+.on {
+    display:inline-block;
+    margin-right : 1%;
+    margin-top: 3vh;
+    font-size:8vh;
+}
+
+.kuns {
+    font-size:8vh;
+    padding-left:3%;
+    height: 50%;
+}
+
+.ons {
+    font-size:8vh;
+    padding-left:3%;
+    height: 50%;
+}
+
+.words {
+    position:relative;
+    float:left;
+    font-size:6vh;
+    width:100%;
+    height: 44vh;
+    vertical-align : center;
+
+
+}
+
+div {
+
+}
+
+td {
+
+}
+
+.card_template {
+    /*padding-left : 2vw; padding-right : 2vw;
+    padding-top : 3vh;
+    padding-bottom : 3vh;*/
+    overflow : auto;
+    /*vertical-align : center;
+    text-align : center;*/
+}
+
+
+
+.cardside_content {
+
+    position : relative;
+    margin-top : 3%;
+    margin-left:2%;
+
+
+
+}
+
+
+
+.sideinfo {
+    font-size: 16pt;
+    position: absolute;
+    top: 1vh;
+    left: 0.5vw;
+}
+
+.level {
+    font-size: 18pt;
+    position: absolute;
+    bottom: 2vh;
+    right: 1vw;
+}
