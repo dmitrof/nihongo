@@ -64,8 +64,8 @@ $(document).ready(function() {
         //alert(field_id);
 
         //alert(word_edit_item);
-        alert(word_edit_item.attr('id'));
-        alert(field_id);
+        //alert(word_edit_item.attr('id'));
+        //alert(field_id);
         word_field_item = $("#" + field_id);
         $(word_edit_item).remove();
         $(word_field_item).remove();
@@ -96,7 +96,7 @@ $(document).ready(function() {
                 //alert("now" + newId);
             }
             else {
-                alert("its okay");
+                //alert("its okay");
             }
         })
 

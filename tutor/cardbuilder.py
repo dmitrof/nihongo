@@ -2,28 +2,33 @@
 
 class CardBuilder:
 
+
     def __init__(self):
         pass
 
     def processPOST(self, pages, params):
-        new_content = {}
+        card_content = []
+
         for page in pages:
             print(page)
-            methodToCall = getattr(self, page)
-            new_content[page] = methodToCall(params)
-        return new_content
+            methodName = page.split('_', 2)[0]
+            cardside = page.split('_', 2)[1]
+            methodToCall = getattr(self, methodName)
+            card_content.append(methodToCall(params, cardside))
+
+        return card_content
 
 
-    def singlekanji(self, params):
+    def singlekanji(self, params, cardside):
         card_side = {}
-        card_side['cardside'] = params['singlekanji_cardside']
-        card_side['item_type'] = "single"
+        card_side['cardside'] = cardside
+        card_side['item_type'] = "singlekanji"
         card_side['bigkanji'] = params['bigkanji']
         return card_side
 
-    def kanjifront(self, params):
+    def kanjifront(self, params, cardside):
         card_side = {}
-        card_side['cardside'] = params['kanjifront_cardside']
+        card_side['cardside'] = cardside
         card_side['kanji'] = params['kanji']
         kun = []
         card_side['item_type'] = "kanjifront"
@@ -43,9 +48,9 @@ class CardBuilder:
         return card_side
 
 
-    def kanjiback(self, params):
+    def kanjiback(self, params, cardside):
         card_side = {}
-        card_side['cardside'] = params['kanjiback_cardside']
+        card_side['cardside'] = cardside
         card_side['item_type'] = "kanjiback"
         card_side['kanjitrans'] = params['kanjitrans']
         card_side['romaji'] = params['romaji']

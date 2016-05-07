@@ -1,4 +1,4 @@
-<div id="kanjiback_edit_{{chunk_id}}" class="edit_item">
+<div id="edit_{{chunk_id}}" class="edit_item">
     <div class="kanjiback_template">
         <div class="kanjitrans"></div>
         <div class="romaji"></div>
@@ -17,13 +17,12 @@
     </select>
     <div class="kanjifront_form">
 
-        <input type="hidden" name="pages[]" value="kanjiback"/>
-        <input type="hidden" name="kanjiback_cardside" value="{{kanjiback.cardside}}"/>
+        <input type="hidden" name="pages[]" value="kanjiback_{{kanjiback.cardside}}"/>
 
-        <label for="kanjitrans_edit">Перевод</label>
-        <input type="text" name="kanjitrans" value="" id="kanjitrans_edit"/><br>
-        <label for="kanjiromaji_edit">Ромадзи</label>
-        <input type="text" name="romaji" value = "" id="kanjiromaji_edit"/><br>
+        <label>Перевод</label>
+        <input type="text" name="kanjitrans" value="" class="kanjitrans_edit"/><br>
+        <label>Ромадзи</label>
+        <input type="text" name="romaji" value = "" class="kanjiromaji_edit"/><br>
 
 
     </div>

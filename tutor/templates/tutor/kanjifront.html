@@ -1,4 +1,4 @@
-<div id="kanjifront_edit_{{kanjifront.cardside}}" class="edit_item">
+<div id="edit_{{kanjifront.cardside}}" class="edit_item">
 
     <div class="kanjifront_template">
 
@@ -52,16 +52,15 @@
     <div class="kanjifront_form">
 
         <br>
-        <label for="kanji_edit">Кандзи</label>
-        <input type="hidden" name="kanjifront_cardside" value="{{kanjifront.cardside}}"/>
-        <input type="hidden" name="pages[]" value="kanjifront"/>
-        <input type="text" name="kanji" value="{{kanjifront.kanji}}" id="kanji_edit"/><br>
+        <label>Кандзи</label>
+        <input type="hidden" name="pages[]" value="kanjifront_{{kanjifront.cardside}}"/>
+        <input type="text" name="kanji" value="{{kanjifront.kanji}}" class="kanji_edit"/><br>
 
-        <label for="kun_edit">Kun</label>
-        <input type="text" name="kuns" value="{% for kun in kanjifront.kun %} {{kun}}, {%endfor%}" id="kun_edit"/><br>
+        <label >Kun</label>
+        <input type="text" name="kuns" value="{% for kun in kanjifront.kun %} {{kun}}, {%endfor%}" class="kun_edit"/><br>
 
-        <label for="on_edit">On</label>
-        <input type="text" name="ons" value="{% for on in kanjifront.on %} {{on}}, {%endfor%}" id="on_edit"/><br>
+        <label >On</label>
+        <input type="text" name="ons" value="{% for on in kanjifront.on %} {{on}}, {%endfor%}" class="on_edit"/><br>
 
         <div class="words_edit"> Слова-примеры <br>
             <input type="hidden" name="words_num" value="{{kanjifront.words|length}}"/>
@@ -78,8 +77,8 @@
 
         </div>
         {% comment %}
-        <label for="words_edit">Слова</label>
-        <input type="text" name="words" value="{{kanjifront.words}}" id="words_edit"/><br>
+        <label >Слова</label>
+        <input type="text" name="words" value="{{kanjifront.words}}" class="words_edit"/><br>
         {% endcomment %}
         <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
     </div>
