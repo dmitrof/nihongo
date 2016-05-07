@@ -1,20 +1,20 @@
-<div id="edit_{{chunk_id}}" class="edit_item">
+<div id="edit_{{cardside}}" class="edit_item">
     <div class="kanjifront_template">
         <div class="cardside_content">
 
-            <div class="kanji"></div>
-            <div class="kanas">
-                <div class="kuns">
+            <div class="kanji" id="kanji_{{cardside}}"></div>
+            <div class="kanas" >
+                <div class="kuns" id="kuns_{{cardside}}">
                 </div>
-                <div class="ons">
+                <div class="ons" id="ons_{{cardside}}">
                 </div>
             </div>
             <br>
-            <table class="words">
+            <table class="words" id="words_{{cardside}}">
             </table>
         </div>
-        <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
-        <div class="level">{{card_info.lvl}}</div>
+        <div class="sideinfo">{{cardside|add:1}}/{{sides_number}}</div>
+        <div class="lvl">{{lvl}}</div>
         {% comment %}
 
         {% endcomment %}
@@ -34,17 +34,17 @@
 
         <br>
         <label>Кандзи</label>
-        <input type="hidden" name="pages[]" value="kanjifront_{{side.cardside}}"/>
-        <input type="text" name="kanji" value="" class="kanji_edit"/><br>
+        <input type="hidden" name="pages[]" value="kanjifront_{{cardside}}"/>
+        <input type="text" name="kanji_{{cardside}}" value="" class="kanji_edit"/><br>
 
         <label>Kun</label>
-        <input type="text" name="kuns" value="" class="kun_edit"/><br>
+        <input type="text" name="kuns_{{cardside}}" value="" class="kun_edit"/><br>
 
         <label>On</label>
-        <input type="text" name="ons" value="" class="on_edit"/><br>
+        <input type="text" name="ons_{{cardside}}" value="" class="on_edit"/><br>
 
         <div class="words_edit"> Слова-примеры <br>
-            <input type="hidden" name="words_num" value=""/>
+            <input type="hidden" name="words_num_{{cardside}}" value="0"/>
             <button type="button" class="add_word">Добавить слово</button>
 
         </div>

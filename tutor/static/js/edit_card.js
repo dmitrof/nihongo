@@ -4,9 +4,11 @@ $(document).ready(function() {
 
 
 
+    $('#edit_pane').on('change', '.lvl_select', function() {
+        $(".lvl").html($(this).val());
+    });
 
-
-     $("#edit_pane").on('keyup', "input[type='text']:not(.word_edit):not(.word_kun_edit)", function() {
+     $("#edit_pane").on('keyup', "input[type='text']:not(.word_edit):not(.word_kun_edit):not(.lvl)", function() {
         //alert("here here");
         //setTimeout(function() {alert($(this).val());}, 1);
         edit_id = ($(this).closest('.edit_item').attr('id'));
@@ -35,20 +37,22 @@ $(document).ready(function() {
 
     $('#edit_pane').on('click', '.add_word', function() {
         var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
-        var words_num = $(side_id + " input[name='words_num']").val();
+
+        cardside = side_id.match(/\d+/)[0];
+        var input_name = 'words_num_' + cardside;
+        var words_num = $(side_id + " input[name=" + input_name + "]").val();
         words_num++;
-        $(side_id + " input[name='words_num']").val(words_num);
-        //alert("before get");
+        $(side_id + " input[name=" + input_name + "]").val(words_num);
 
-        var chunk_id = words_num
+        var chunk_id = words_num;
 
-        $.get('/tutor/get_chunk/', {template_name : 'word_edit_chunk.html',  chunk_id : chunk_id}, function(formData) {
+        $.get('/tutor/get_chunk/', {template_name : 'word_edit_chunk.html',  chunk_id : chunk_id, cardside : cardside}, function(formData) {
             $(side_id + " .words_edit .add_word").before(formData);
 
         }).fail(function() { alert("cant reach the html file")});
 
 
-        $.get('/tutor/get_chunk/', {template_name : 'word_field_chunk.html',  chunk_id : chunk_id}, function(fieldData) {
+        $.get('/tutor/get_chunk/', {template_name : 'word_field_chunk.html',  chunk_id : chunk_id, cardside : cardside}, function(fieldData) {
             $(side_id + " .words").append(fieldData);
         }).fail(function() { alert("cant reach the html file")});
 
@@ -63,20 +67,12 @@ $(document).ready(function() {
         var field_id = $(this).parent().attr('id');
         var word_edit_item = $(this).parent()
         field_id = field_id.replace("edit_", "field_");
-        //alert(field_id);
-
-        //alert(word_edit_item);
-        //alert(word_edit_item.attr('id'));
-        //alert(field_id);
         word_field_item = $("#" + field_id);
         $(word_edit_item).remove();
         $(word_field_item).remove();
         var input_name = 'words_num_' + cardside;
         var words_num = $(side_id + " input[name=" + input_name + "]").val();
-        //alert(words_num)
         words_num--;
-
-        //alert($(side_id + " input[name=" + input_name + "]").val());
         $(side_id + " input[name=" + input_name + "]").val(words_num);
         //alert($(side_id + " input[name=" + input_name + "]").val());
 
@@ -92,14 +88,14 @@ $(document).ready(function() {
 
                 var current = $("#" + id + " .word").text();
 
-                //alert("was" + id);
+                alert("was" + id);
                 var newId = id.replace(idNum, newNum);
                 current = current.replace(idNum, newNum);
 
                 $("#" + id + " .word").html(current);
                 $("#" + id).attr('id', newId);
                 //$(id + " .word_kun").attr('id', newId);
-                //alert("now" + newId);
+                alert("now" + newId);
             }
             else {
                 //alert("its okay");
@@ -126,19 +122,23 @@ $(document).ready(function() {
             }
 
         })
-        //alert(side_id);
-    //alert(words_num);
+
 
     });
 
     $('#edit_pane').on('change', '.side_select', function() {
 
+        var lvl = $("#info_lvl").val();
+        var sides_number = $("#info_sides_number").val();
+        //var card_info = {}; card_info.lvl = lvl; card_info.sides_number = sides_number;
+        //alert(lvl + " " + sides_number);
         var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
-
+        cardside = side_id.match(/\d+/)[0];
         var template_name = $(this).val() + '_chunk.html';
         //alert(side_id + " " + template_name);
-        var chunk_id = Math.floor(10 + Math.random() * (100))
-        $.get('/tutor/get_chunk/', {template_name : template_name,  chunk_id : chunk_id}, function(sideData) {
+        var chunk_id = -1;
+        $.get('/tutor/get_chunk/', {template_name : template_name,  chunk_id : chunk_id,
+                    cardside : cardside, lvl, sides_number}, function(sideData) {
             //alert(side_id);
             $(side_id).replaceWith(sideData);
             //alert(sideData);

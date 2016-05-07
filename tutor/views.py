@@ -240,13 +240,15 @@ def get_chunk(request):
     rulesProvider = RulesProvider()
     availablePages = rulesProvider.provideTemplateList()
     template_name = 'tutor/chunks/' + request.GET['template_name']
-    fill_dict = request.GET.get('fill_dict', False)
-    chunk_id = request.GET['chunk_id']
-
-    print(chunk_id)
+    fill_dict = {}
+    chunk_id = request.GET.get('chunk_id', False)
+    cardside = request.GET['cardside']
+    lvl = request.GET.get('lvl', False)
+    sides_number = request.GET.get('sides_number', False)
     #for param in request.GET:
-        #print(param + " " + request.GET[param])
-    return render(request, template_name, {'fill_dict' : fill_dict, 'chunk_id' : chunk_id, 'available_pages' : availablePages})
+        #print(param + " " + request.GET[param])#
+    return render(request, template_name, {'fill_dict' : fill_dict, 'chunk_id' : chunk_id, 'sides_number' : sides_number,
+                                           'available_pages' : availablePages, 'cardside' : cardside, 'lvl' : lvl})
 
 
     """if 'name' in request.POST:

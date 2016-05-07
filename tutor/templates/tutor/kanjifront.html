@@ -22,7 +22,7 @@
                 </div>
             </div>
             <br>
-            <table class="words_{{side.cardside}}">
+            <table class="words" id="words_{{side.cardside}}">
 
                 {% for wordItem in side.words %}
                     <tr class="word_item_field" id="word_item_field_{{forloop.counter}}_{{side.cardside}}"><td class='word'> {{forloop.counter}}) {{wordItem.word}} </td>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
-        <div class="level">{{card_info.lvl}}</div>
+        <div class="lvl">{{card_info.lvl}}</div>
         {% comment %}
 
         {% endcomment %}
@@ -68,9 +68,9 @@
             {% for wordItem in side.words %}
                 <div class="word_item_edit" id="word_item_edit_{{forloop.counter}}_{{side.cardside}}">
                     <label >Слово</label>
-                    <input type="text" name="word[]" value="{{wordItem.word}}" class="word_edit" />
+                    <input type="text" name="word_{{side.cardside}}[]" value="{{wordItem.word}}" class="word_edit" />
                     <label >Написание</label>
-                    <input type="text" name="word_kun[]" value="{{wordItem.word_kun}}" class="word_kun_edit" />
+                    <input type="text" name="word_kun_{{side.cardside}}[]" value="{{wordItem.word_kun}}" class="word_kun_edit" />
                     <button type="button" class="delete_word">Удалить слово</button>
                 </div>
             {% endfor %}

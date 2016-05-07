@@ -1,0 +1,24 @@
+<div id="edit_card_info" class="edit_item">
+    Информация о карточке
+
+    <div class="card_info_form">
+
+        <label>Уровень JLPT</label>
+        <select name="lvl_select" class="lvl_select">
+
+                <option value="N5" {% if card_info.lvl == 'N5' %}selected="selected"{% endif %}>N5</option>
+                <option value="N4" {% if card_info.lvl == 'N4' %}selected="selected"{% endif %}>N4</option>
+                <option value="N3" {% if card_info.lvl == 'N3' %}selected="selected"{% endif %}>N3</option>
+                <option value="N2" {% if card_info.lvl == 'N2' %}selected="selected"{% endif %}>N2</option>
+                <option value="N1" {% if  card_info.lvl == 'N' %}selected="selected"{% endif %}>N1</option>
+
+        </select>
+        {% comment %}
+            <label>Категория</label>
+
+        {% endcomment %}
+
+
+    </div>
+
+</div>

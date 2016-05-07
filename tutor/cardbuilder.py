@@ -31,14 +31,14 @@ class CardBuilder:
     def kanjifront(self, params, cardside):
         card_side = {}
         card_side['cardside'] = cardside
-        card_side['kanji'] = params['kanji']
+        card_side['kanji'] = params['kanji_' + cardside]
         kun = []
         card_side['item_type'] = "kanjifront"
-        kun.append(params['kuns'])
+        kun.append(params['kuns_' +  cardside])
         card_side['kun'] = kun
-        card_side['on'] = [params['ons']]
-        param_words = params.getlist('word[]')
-        param_word_kuns = params.getlist('word_kun[]')
+        card_side['on'] = [params['ons_'  + cardside]]
+        param_words = params.getlist('word_' + cardside + '[]')
+        param_word_kuns = params.getlist('word_kun_' + cardside + '[]')
         words = []
         for param_word, param_word_kun in zip(param_words, param_word_kuns):
             new_word = {}
@@ -54,7 +54,7 @@ class CardBuilder:
         card_side = {}
         card_side['cardside'] = cardside
         card_side['item_type'] = "kanjiback"
-        card_side['kanjitrans'] = params['kanjitrans']
-        card_side['romaji'] = params['romaji']
+        card_side['kanjitrans'] = params['kanjitrans_' + cardside]
+        card_side['romaji'] = params['romaji' + carside]
 
         return card_side
