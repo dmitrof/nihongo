@@ -88,14 +88,14 @@ $(document).ready(function() {
 
                 var current = $("#" + id + " .word").text();
 
-                alert("was" + id);
+                //alert("was" + id);
                 var newId = id.replace(idNum, newNum);
                 current = current.replace(idNum, newNum);
 
                 $("#" + id + " .word").html(current);
                 $("#" + id).attr('id', newId);
                 //$(id + " .word_kun").attr('id', newId);
-                alert("now" + newId);
+                //alert("now" + newId);
             }
             else {
                 //alert("its okay");

@@ -6,6 +6,7 @@
 <div id="edit_pane">
 <form class="card_form" action="" method="post">
     {% include "tutor/card_info_edit.html" %}
+
     <input type="hidden" name="info_lvl" id="info_lvl" value="{{card_info.lvl}}">
     <input type="hidden" name="info_sides_number" id="info_sides_number" value="{{sides_number}}">
     {% csrf_token %}

@@ -203,15 +203,16 @@ class Edit_Card(View):
             page['cardside'] = side.get('cardside')
             pages.append(page)
 
-        pages = sorted(pages, key = lambda page:page['cardside'])
 
-        print(pages)
+        sides_list = sorted(sides_list, key = lambda side:side['cardside'])
+
+        #print(pages)
 
         template_dict['sides_list'] = sides_list
         template_dict['sides_number'] = sides_number
         template_dict['card'] = card
         template_dict['card_id'] = card_id
-        template_dict['pages'] = pages
+
         return render(request, self.template_name, template_dict)
     #This method gets changes in card structure and updates DB
     def post(self, request, card_id):

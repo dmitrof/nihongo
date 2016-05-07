@@ -1,7 +1,7 @@
 <div id="edit_{{side.cardside}}" class="edit_item">
     {{page.pageName}}
     <!--<div data-role="header">Kanji card!</div>-->
-    <div class="singlekanji_template">
+    <div class="singlekanji_template card_template">
         <div class="bigkanji" id="bigkanji_{{side.cardside}}">{{side.bigkanji}}</div>
         <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
         <div class="lvl">{{card_info.lvl}}</div>
@@ -16,7 +16,7 @@
             </option>
         {% endfor %}
     </select> <br>
-    <div class="singlekanji_form">
+    <div class="singlekanji_form card_form">
         {% csrf_token %}
         <input type="hidden" name="pages[]" value="singlekanji_{{side.cardside}}"/>
         <label>Кандзи</label>

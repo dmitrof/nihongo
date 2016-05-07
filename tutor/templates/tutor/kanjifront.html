@@ -1,7 +1,7 @@
 <div id="edit_{{side.cardside}}" class="edit_item">
     {{page.pageName}}
 
-    <div class="kanjifront_template">
+    <div class="kanjifront_template card_template">
 
         <div class="cardside_content">
 
@@ -13,7 +13,7 @@
                         {{kun}},
                     {% endfor %}
                 </div>
-                <div class="ons_{{side.cardside}}">
+                <div class="ons" id="ons_{{side.cardside}}">
                     {% for on in side.on%}
                         {% comment %}<div class='on'>{{on}},  </div> {% endcomment %}
                         {{on}},
@@ -50,7 +50,7 @@
             </option>
         {% endfor %}
     </select>
-    <div class="kanjifront_form">
+    <div class="kanjifront_form card_form">
 
         <br>
         <label>Кандзи</label>

@@ -7,6 +7,7 @@ class CardBuilder:
         pass
 
     def processPOST(self, pages, params):
+        card_to_save = {}
         card_content = []
 
         for page in pages:
@@ -16,7 +17,10 @@ class CardBuilder:
             methodToCall = getattr(self, methodName)
             card_content.append(methodToCall(params, cardside))
 
-        return card_content
+        card_to_save['content'] = card_content
+        card_to_save['card_info'] = self.card_info(params)
+
+        return card_to_save
 
 
     def singlekanji(self, params, cardside):
@@ -55,6 +59,13 @@ class CardBuilder:
         card_side['cardside'] = cardside
         card_side['item_type'] = "kanjiback"
         card_side['kanjitrans'] = params['kanjitrans_' + cardside]
-        card_side['romaji'] = params['romaji' + carside]
+        card_side['kanjiromaji'] = params['kanjiromaji_' + cardside]
 
         return card_side
+
+    def card_info(self, params):
+        card_info = {}
+        lvl = params['lvl_select']
+        card_info['lvl'] = lvl
+
+        return card_info
