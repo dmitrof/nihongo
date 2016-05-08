@@ -168,6 +168,8 @@ class Edit_Card(View):
     def get(self, request, card_id):
         rulesProvider = RulesProvider()
         availablePages = rulesProvider.provideTemplateList()
+        task_types = rulesProvider.provideTaskTypeList()
+        #print(task_types)
         #for template in available:
             #print(template)
         c = Bucket('couchbase://localhost/nihongo')
@@ -207,7 +209,7 @@ class Edit_Card(View):
         sides_list = sorted(sides_list, key = lambda side:side['cardside'])
 
         #print(pages)
-
+        template_dict['task_types'] = task_types
         template_dict['sides_list'] = sides_list
         template_dict['sides_number'] = sides_number
         template_dict['card'] = card
@@ -227,7 +229,9 @@ class Edit_Card(View):
         #words = request.POST.getlist("word[]")
         cardBuilder = CardBuilder();
         pages = request.POST.getlist("pages[]")
+        card_to_save = cardBuilder.processPOST(pages, request.POST)
         print(cardBuilder.processPOST(pages, request.POST))
+        c.upsert(card_id, card_to_save)
 
         #for word in words:
          #   print(word)
@@ -240,6 +244,7 @@ def get_chunk(request):
     print("IM BEING CALLED")
     rulesProvider = RulesProvider()
     availablePages = rulesProvider.provideTemplateList()
+    task_types = rulesProvider.provideTaskTypeList()
     template_name = 'tutor/chunks/' + request.GET['template_name']
     fill_dict = {}
     chunk_id = request.GET.get('chunk_id', False)
@@ -249,7 +254,7 @@ def get_chunk(request):
     #for param in request.GET:
         #print(param + " " + request.GET[param])#
     return render(request, template_name, {'fill_dict' : fill_dict, 'chunk_id' : chunk_id, 'sides_number' : sides_number,
-                                           'available_pages' : availablePages, 'cardside' : cardside, 'lvl' : lvl})
+                                           'available_pages' : availablePages, 'cardside' : cardside, 'lvl' : lvl, 'task_types' : task_types})
 
 
     """if 'name' in request.POST:

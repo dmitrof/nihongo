@@ -19,6 +19,10 @@ class CardBuilder:
 
         card_to_save['content'] = card_content
         card_to_save['card_info'] = self.card_info(params)
+        card_to_save['features'] = self.features(params)
+        card_to_save['doc_channels'] = self.doc_channels(params)
+        card_to_save['doc_type'] = 'flashcard'
+        card_to_save['doc_name'] = 'Карточка созданная в nihongo tutor'
 
         return card_to_save
 
@@ -26,7 +30,7 @@ class CardBuilder:
     def singlekanji(self, params, cardside):
         card_side = {}
         card_side['cardside'] = cardside
-
+        card_side['item_type'] = "singlekanji"
         #ind = 'bigkanji_' + cardside
         card_side['bigkanji'] = params['bigkanji_s' + cardside]
 
@@ -66,6 +70,19 @@ class CardBuilder:
     def card_info(self, params):
         card_info = {}
         lvl = params['lvl_select']
+        card_info['task_type'] = params.get('task_type_select', 'kanji_card')
         card_info['lvl'] = lvl
 
         return card_info
+
+    def doc_channels(self, params):
+        doc_channels = []
+        doc_channels.append('sakura')
+        return doc_channels
+
+    def features(self, params):
+        features = []
+        features.append('bad')
+
+        return features
+

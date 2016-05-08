@@ -166,7 +166,7 @@ $(document).ready(function() {
     $('#edit_pane').on('change', '.side_select', function() {
 
         var lvl = $("#info_lvl").val();
-        var sides_number = $("#info_sides_number").val();
+        var sides_number = $(".edit_item:not(.meta_edit)").length;
 
         //var card_info = {}; card_info.lvl = lvl; card_info.sides_number = sides_number;
         //alert(lvl + " " + sides_number);
@@ -242,10 +242,10 @@ $(document).ready(function() {
 
      $('#edit_pane').on('click', '.add_side_btn', function() {
 
-        var sides_array = $(".edit_item:not(.meta_edit)").toArray();
+        //var sides_array = $(".edit_item:not(.meta_edit)").toArray();
         //var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
         //var sides_num = sides_array.length;
-        var cardside = sides_array.length;
+        var cardside = $(".edit_item:not(.meta_edit)").length;
         var template_name = $("#new_side_select").val() + "_chunk.html";
         alert(template_name);
         var lvl = $("#info_lvl").val();

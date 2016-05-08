@@ -12,7 +12,16 @@
                 <option value="N2" {% if card_info.lvl == 'N2' %}selected="selected"{% endif %}>N2</option>
                 <option value="N1" {% if  card_info.lvl == 'N' %}selected="selected"{% endif %}>N1</option>
 
-        </select>
+        </select><br>
+        <label>Тип задания {{card_info.task_type}}</label>
+        <select name="task_type_select">
+        {% for task_type, task_value in task_types.items %}
+            <option value="{{task_type}}" {% if task_type == card_info.task_type %}selected="selected"{% endif %}>
+
+                {{task_value}}
+            </option>
+        {% endfor %}
+    </select>
         {% comment %}
             <label>Категория</label>
 
