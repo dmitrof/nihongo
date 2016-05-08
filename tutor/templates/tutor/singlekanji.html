@@ -1,8 +1,8 @@
-<div id="edit_{{side.cardside}}" class="edit_item">
+<div id="edit_s{{side.cardside}}" class="edit_item">
     {{page.pageName}}
     <!--<div data-role="header">Kanji card!</div>-->
     <div class="singlekanji_template card_template">
-        <div class="bigkanji" id="bigkanji_{{side.cardside}}">{{side.bigkanji}}</div>
+        <div class="bigkanji" id="bigkanji_s{{side.cardside}}">{{side.bigkanji}}</div>
         <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
         <div class="lvl">{{card_info.lvl}}</div>
         <br>
@@ -18,12 +18,14 @@
     </select> <br>
     <div class="singlekanji_form card_form">
         {% csrf_token %}
-        <input type="hidden" name="pages[]" value="singlekanji_{{side.cardside}}"/>
+        <input type="hidden" name="pages[]" value="singlekanji_s{{side.cardside}}"/>
         <label>Кандзи</label>
-        <input type="text" name="bigkanji_{{side.cardside}}" value ="{{side.bigkanji}}" class="bigkanji_edit"/><br>
+        <input type="text" name="bigkanji_s{{side.cardside}}" value ="{{side.bigkanji}}" class="bigkanji_edit"/><br>
         <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
 
     </div>
+    <button type="button" class="cardside_up">Вверх</button>
+        <button type="button" class="cardside_down">Вниз</button>
 </div>
 
 

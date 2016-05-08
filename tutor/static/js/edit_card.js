@@ -39,7 +39,7 @@ $(document).ready(function() {
         var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
 
         cardside = side_id.match(/\d+/)[0];
-        var input_name = 'words_num_' + cardside;
+        var input_name = 'words_num_s' + cardside;
         var words_num = $(side_id + " input[name=" + input_name + "]").val();
         words_num++;
         $(side_id + " input[name=" + input_name + "]").val(words_num);
@@ -70,7 +70,7 @@ $(document).ready(function() {
         word_field_item = $("#" + field_id);
         $(word_edit_item).remove();
         $(word_field_item).remove();
-        var input_name = 'words_num_' + cardside;
+        var input_name = 'words_num_s' + cardside;
         var words_num = $(side_id + " input[name=" + input_name + "]").val();
         words_num--;
         $(side_id + " input[name=" + input_name + "]").val(words_num);
@@ -130,6 +130,7 @@ $(document).ready(function() {
 
         var lvl = $("#info_lvl").val();
         var sides_number = $("#info_sides_number").val();
+
         //var card_info = {}; card_info.lvl = lvl; card_info.sides_number = sides_number;
         //alert(lvl + " " + sides_number);
         var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
@@ -144,6 +145,64 @@ $(document).ready(function() {
             //alert(sideData);
 
         }).fail(function() { alert("cant reach the html file")});
+    });
+
+    $('#edit_pane').on('click', '.cardside_up, .cardside_down', function() {
+        var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
+        var cardside = side_id.match(/\d+/)[0];
+        var new_side_number = -1;
+        if ($(this).attr('class') == 'cardside_up') {
+            new_side_number = cardside - 1;
+        } else
+        if ($(this).attr('class') == 'cardside_down') {
+            new_side_number = Number.parseInt(cardside) + 1;
+        }
+        var side_content = $(side_id).html();
+        var regex = /(\_s\d)/g;
+
+        var editItems = $(".edit_item:not(.meta_edit)").toArray();
+
+        editItems.forEach(function(editItem) {
+
+            var edit_id = $(editItem).attr('id');
+            idNum = edit_id.match(/\d+/)[0];
+
+            //alert(idNum + " " + new_side_number)
+            var changeStatus = false;
+            if (idNum == new_side_number) {
+                changeStatus = true;
+                edit_content = $(editItem).html();
+                side_content = side_content.replace(regex, "_s" + new_side_number);
+                edit_content = edit_content.replace(regex, "_s" + cardside);
+                $(editItem).html(side_content);
+                $(side_id).html(edit_content);
+
+                $(editItem).trigger('side_change');
+                $(side_id).trigger('side_change');
+                //break;
+            }
+            var alertString = "cardside: " + edit_id + "change status: " + changeStatus;
+
+        });
+
+
+        //var regex = new Regex((/([^\?]*)\_s(\d*)/))        //alert(match);
+    });
+
+    $('#edit_pane').on('side_change', ".edit_item", function() {
+        //alert($(this).attr('id'));
+        var side_id = "#" + $(this).attr('id');
+        var cardside = $(side_id + " input[name='pages[]'").val();
+        cardside = new_sideinfo.match(/\d+/)[0]; cardside++;
+        new_sideinfo = $(side_id + " .sideinfo").text();
+        String.prototype.replaceAt=function(index, character) {
+            return this.substr(0, index) + character + this.substr(index+character.length);
+        }
+
+        new_sideinfo = new_sideinfo.replaceAt(0, cardside);
+
+        $(side_id + " .sideinfo").html(new_sideinfo);
+
     });
 
 

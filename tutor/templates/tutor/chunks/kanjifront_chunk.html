@@ -1,16 +1,16 @@
-<div id="edit_{{cardside}}" class="edit_item">
+<div id="edit_s{{cardside}}" class="edit_item">
     <div class="kanjifront_template card_template">
         <div class="cardside_content">
 
-            <div class="kanji" id="kanji_{{cardside}}"></div>
+            <div class="kanji" id="kanji_s{{cardside}}"></div>
             <div class="kanas" >
-                <div class="kuns" id="kuns_{{cardside}}">
+                <div class="kuns" id="kuns_s{{cardside}}">
                 </div>
-                <div class="ons" id="ons_{{cardside}}">
+                <div class="ons" id="ons_s{{cardside}}">
                 </div>
             </div>
             <br>
-            <table class="words" id="words_{{cardside}}">
+            <table class="words" id="words_s{{cardside}}">
             </table>
         </div>
         <div class="sideinfo">{{cardside|add:1}}/{{sides_number}}</div>
@@ -34,22 +34,24 @@
 
         <br>
         <label>Кандзи</label>
-        <input type="hidden" name="pages[]" value="kanjifront_{{cardside}}"/>
-        <input type="text" name="kanji_{{cardside}}" value="" class="kanji_edit"/><br>
+        <input type="hidden" name="pages[]" value="kanjifront_s{{cardside}}"/>
+        <input type="text" name="kanji_s{{cardside}}" value="" class="kanji_edit"/><br>
 
         <label>Kun</label>
-        <input type="text" name="kuns_{{cardside}}" value="" class="kun_edit"/><br>
+        <input type="text" name="kuns_s{{cardside}}" value="" class="kun_edit"/><br>
 
         <label>On</label>
-        <input type="text" name="ons_{{cardside}}" value="" class="on_edit"/><br>
+        <input type="text" name="ons_s{{cardside}}" value="" class="on_edit"/><br>
 
         <div class="words_edit"> Слова-примеры <br>
-            <input type="hidden" name="words_num_{{cardside}}" value="0"/>
+            <input type="hidden" name="words_num_s{{cardside}}" value="0"/>
             <button type="button" class="add_word">Добавить слово</button>
 
         </div>
         <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
     </div>
+    <button type="button" class="cardside_up">Вверх</button>
+        <button type="button" class="cardside_down">Вниз</button>
 
 
 </div>

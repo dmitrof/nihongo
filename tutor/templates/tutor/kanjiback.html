@@ -1,9 +1,9 @@
 
-<div id="edit_{{side.cardside}}" class="edit_item">
+<div id="edit_s{{side.cardside}}" class="edit_item">
     {{page.pageName}}
     <div class="kanjiback_template card_template">
-        <div class="kanjitrans" id="kanjitrans_{{side.cardside}}">{{side.kanjitrans}}</div>
-        <div class="romaji" id="kanjiromaji_{{side.cardside}}">{{side.romaji}}</div>
+        <div class="kanjitrans" id="kanjitrans_s{{side.cardside}}">{{side.kanjitrans}}</div>
+        <div class="romaji" id="kanjiromaji_s{{side.cardside}}">{{side.romaji}}</div>
         <div class="lvl">{{card_info.lvl}}</div>
         <div class="sideinfo">{{side.cardside|add:1}}/{{sides_number}}</div>
         <br>
@@ -19,15 +19,17 @@
     </select>
     <div class="kanjifront_form card_form">
 
-        <input type="hidden" name="pages[]" value="kanjiback_{{side.cardside}}"/>
+        <input type="hidden" name="pages[]" value="kanjiback_s{{side.cardside}}"/>
 
         <label >Перевод</label>
-        <input type="text" name="kanjitrans_{{side.cardside}}" value="{{side.kanjitrans}}" class="kanjitrans_edit"/><br>
+        <input type="text" name="kanjitrans_s{{side.cardside}}" value="{{side.kanjitrans}}" class="kanjitrans_edit"/><br>
         <label >Ромадзи</label>
-        <input type="text" name="kanjiromaji_{{side.cardside}}" value = "{{side.romaji}} "class="kanjiromaji_edit"/><br>
+        <input type="text" name="kanjiromaji_s{{side.cardside}}" value = "{{side.romaji}} "class="kanjiromaji_edit"/><br>
 
 
     </div>
+    <button type="button" class="cardside_up">Вверх</button>
+        <button type="button" class="cardside_down">Вниз</button>
 
 </div>
 
