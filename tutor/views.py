@@ -43,7 +43,7 @@ class GroupDecksList(View):
             print(description)
             ckey = 'd_' + self.constgroup + '_' + str(uuid4()).replace('-', '_')
 
-            newdeck = {'doc_type' : 'deck', 'description' : description}
+            newdeck = {'doc_type' : 'deck', 'description' : description, 'deck_name' : description}
             newdeck['cards_list'] = [];
             c.insert(ckey, newdeck)
             group = c.get(self.group_id).value
@@ -162,7 +162,7 @@ class DeckEdit(View):
                 print(e)
 
 
-class Edit_Card(View):
+class EditCard(View):
     template_name = 'tutor/edit_card.html'
 
     def get(self, request, card_id):
@@ -238,6 +238,10 @@ class Edit_Card(View):
 
         return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'card_id' : card_id}))
 
+class CreateCard(View):
+    pass
+
+
 
 
 def get_chunk(request):
@@ -255,6 +259,10 @@ def get_chunk(request):
         #print(param + " " + request.GET[param])#
     return render(request, template_name, {'fill_dict' : fill_dict, 'chunk_id' : chunk_id, 'sides_number' : sides_number,
                                            'available_pages' : availablePages, 'cardside' : cardside, 'lvl' : lvl, 'task_types' : task_types})
+
+
+
+
 
 
     """if 'name' in request.POST:

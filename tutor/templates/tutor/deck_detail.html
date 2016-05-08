@@ -11,5 +11,13 @@
     </form>
 
 {% endfor %}
+    <div id="add_card">
+        <label>Меню добавления новых карточек</label>
+        <form name="create_card_in_deck" method="get" action="{% url 'tutor:create_card_in_deck' deck_id %}">
+        {% csrf_token %}
+        <input type="submit" value="add_card" />
+        </form>
+
+    </div>
 
 </body>
