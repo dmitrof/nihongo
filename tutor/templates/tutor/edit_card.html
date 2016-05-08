@@ -16,7 +16,19 @@
         {% include side.page_name %}
     {% endfor %}
 
-    <br><button type="button" name="add_side" class="add_side">Добавить сторону</button><br><br>
+    <div id="add_side" class="edit_item meta_edit">
+
+        <label>Тип задания</label>
+        <select id="new_side_select" class="side_select">
+        {% for t_page, text in available_pages.items %}
+            <option value="{{t_page}}" {% if t_page == "kanjifront" %}selected="selected"{% endif %}>
+                {{text}}
+            </option>
+        {% endfor %}
+        </select>
+        <br><button type="button" name="add_side_btn" class="add_side_btn">Добавить сторону</button><br><br>
+    </div>
+
     <input type="submit" name="edit_side" value="Подтвердить изменения"/>
 </form>
 <script src="{% static 'js/jquery-1.12.1.js' %}"></script>

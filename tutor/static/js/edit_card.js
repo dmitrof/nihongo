@@ -123,33 +123,45 @@ $(document).ready(function() {
 
 
     $('#edit_pane').on('click', '.delete_side', function() {
+        //$("#edit_s1").attr('id', 'iHATEJAVASCRIPT');
         //alert(sides_num);
         //$('#edit_pane').append()
+        var parent = $(this).closest('.edit_item');
+        //alert($(parent).attr('id'));
         var del_side_id = "#" + ($(this).closest('.edit_item').attr('id'));
         del_cardside = del_side_id.match(/\d+/)[0];
         del_side = $(del_side_id);
-        $(del_side).remove();
+        $(parent).remove();
         var sides_array = $(".edit_item:not(.meta_edit)").toArray();
         var sides_num = sides_array.length;
         sides_array.forEach(function(side) {
+
             var side_id = $(side).attr('id');
+
+            //alert($("#" + side_id + " input[name='pages[]']").val());
             var side_num = side_id.match(/\d+/)[0];
             if (side_num > del_cardside) {
-                alert(side_id);
-                var new_side_num = side_num-1;
-                side_id = side_id.replace(side_num, new_side_num);
-                $('#' + side_id).attr('id', side_id);
-                var side_content = $('#' + side_id).html();
-                alert(side_content);
+                //alert($(side).html());
+                var new_side_num = side_num - 1;
+                var new_side_id = side_id.replace(side_num, new_side_num);
+                //alert(new_side_id);
+
+                $(side).attr('id', new_side_id);
+                //alert($(side).html());
+                var side_content = $('#' + new_side_id).html();
+                //alert(side_content);
                 var regex = /(\_s\d)/g;
-                side_content = side_content.replace(regex, "_s" + new_side_number);
-                $('#' + side_id).html(side_content);
+                side_content = side_content.replace(regex, "_s" + new_side_num);
+                $('#' + new_side_id).html(side_content);
+                $('#' + new_side_id + " .sideinfo").html((new_side_num + 1) + "/" + sides_num);
             }
         })
 
 
 
      });
+
+
 
     $('#edit_pane').on('change', '.side_select', function() {
 
@@ -228,9 +240,20 @@ $(document).ready(function() {
 
     });
 
-     $('#edit_pane').on('click', '.add_side', function() {
-        var sides_num = $(".edit_item:not(.meta_edit)").toArray().length;
-        alert(sides_num);
+     $('#edit_pane').on('click', '.add_side_btn', function() {
+
+        var sides_array = $(".edit_item:not(.meta_edit)").toArray();
+        //var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
+        //var sides_num = sides_array.length;
+        var cardside = sides_array.length;
+        var template_name = $("#new_side_select").val() + "_chunk.html";
+        alert(template_name);
+        var lvl = $("#info_lvl").val();
+        var sides_number = cardside + 1;
+        $.get('/tutor/get_chunk/', {template_name : template_name,  cardside : cardside, lvl : lvl, sides_number : sides_number}, function(sideData) {
+            $("#add_side").before(sideData);
+
+        }).fail(function() { alert("cant reach the html file")});
         //$('#edit_pane').append()
 
      });
