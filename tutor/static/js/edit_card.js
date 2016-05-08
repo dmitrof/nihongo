@@ -109,8 +109,6 @@ $(document).ready(function() {
             if (idNum > delNum) {
                 var newNum = idNum - 1;
 
-
-
                 //alert("was" + id);
                 var newId = id.replace(idNum, newNum);
                 $("#" +  id).attr('id', newId);
@@ -120,11 +118,38 @@ $(document).ready(function() {
             else {
                 alert("its okay");
             }
+        })
+    });
 
+
+    $('#edit_pane').on('click', '.delete_side', function() {
+        //alert(sides_num);
+        //$('#edit_pane').append()
+        var del_side_id = "#" + ($(this).closest('.edit_item').attr('id'));
+        del_cardside = del_side_id.match(/\d+/)[0];
+        del_side = $(del_side_id);
+        $(del_side).remove();
+        var sides_array = $(".edit_item:not(.meta_edit)").toArray();
+        var sides_num = sides_array.length;
+        sides_array.forEach(function(side) {
+            var side_id = $(side).attr('id');
+            var side_num = side_id.match(/\d+/)[0];
+            if (side_num > del_cardside) {
+                alert(side_id);
+                var new_side_num = side_num-1;
+                side_id = side_id.replace(side_num, new_side_num);
+                $('#' + side_id).attr('id', side_id);
+                var side_content = $('#' + side_id).html();
+                alert(side_content);
+                var regex = /(\_s\d)/g;
+                side_content = side_content.replace(regex, "_s" + new_side_number);
+                $('#' + side_id).html(side_content);
+            }
         })
 
 
-    });
+
+     });
 
     $('#edit_pane').on('change', '.side_select', function() {
 
@@ -184,8 +209,6 @@ $(document).ready(function() {
             var alertString = "cardside: " + edit_id + "change status: " + changeStatus;
 
         });
-
-
         //var regex = new Regex((/([^\?]*)\_s(\d*)/))        //alert(match);
     });
 
@@ -193,18 +216,24 @@ $(document).ready(function() {
         //alert($(this).attr('id'));
         var side_id = "#" + $(this).attr('id');
         var cardside = $(side_id + " input[name='pages[]'").val();
-        cardside = new_sideinfo.match(/\d+/)[0]; cardside++;
+        cardside = cardside.match(/\d+/)[0];
+         cardside++;
+
         new_sideinfo = $(side_id + " .sideinfo").text();
-        String.prototype.replaceAt=function(index, character) {
-            return this.substr(0, index) + character + this.substr(index+character.length);
-        }
 
-        new_sideinfo = new_sideinfo.replaceAt(0, cardside);
-
+        //alert($(this).attr('id'));
+        new_sideinfo = new_sideinfo.replace(/(\d)/, cardside.toString());
+        //alert(new_sideinfo)
         $(side_id + " .sideinfo").html(new_sideinfo);
 
     });
 
+     $('#edit_pane').on('click', '.add_side', function() {
+        var sides_num = $(".edit_item:not(.meta_edit)").toArray().length;
+        alert(sides_num);
+        //$('#edit_pane').append()
+
+     });
 
 
 
