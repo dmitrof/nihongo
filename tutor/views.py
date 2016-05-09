@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -12,24 +14,31 @@ from uuid import uuid4
 from tutor.cardbuilder import CardBuilder
 from tutor.rules import RulesProvider
 
-class TutorGroupsList(View):
+
+class TutorGroupsList(LoginRequiredMixin, View):
     template_name = 'tutor/tutor_groups_list.html'
     tutor_uid = 'user_sakuratutor'
     c = Bucket('couchbase://localhost/nihongo')
-
+    @login_required()
     def get(self, request, user_uid):
         c = self.c
         tutor_doc = c.get(user_uid)
+        tutor_uid = tutor_doc.key
+        tutor_doc = tutor_doc.value
 
         nq = N1QLQuery('SELECT * FROM `nihongo` WHERE tutor_uid=$tutor_uid', tutor_uid = user_uid)
         groups_list = []
         for row in c.n1ql_query(nq):
             print(row)
-            groups_list.append(row)
+            group = row['nihongo']
+            groups_list.append(group)
 
         #print(tutor_doc)
 
-        return HttpResponse(tutor_doc)
+        return render(request, self.template_name, { 'tutor_uid' : tutor_uid,
+            'tutor_doc' : tutor_doc, 'groups_list' : groups_list,
+        })
+
 
 
 class GroupDecksList(View):

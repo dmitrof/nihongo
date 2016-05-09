@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^nihongo_tutor/', include('nihongo_tutor.urls', namespace="nihongo_tutor")),
     url(r'^tutor/', include('tutor.urls', namespace="tutor")),
+    url(r'^auth/', include('loginsys.urls', namespace="auth")),
     url(r'^admin/', admin.site.urls),
 ]
 

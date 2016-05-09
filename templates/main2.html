@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Блог СДО JLPT</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/foundation.css' %}">
+</head>
+<body>
+<div class="top-bar">
+    <section class="top-bar-section">
+        <ul class="right">
+            {% if user.is_authenticated%}
+                <li><a href="/auth/logout/">Выйти ({{ user.get_username }})</a></li>
+            {% else %}
+                <li><a href="/auth/login/">Войти</a></li>
+            {% endif %}
+        </ul>
+    </section>
+</div>
+
+<style>
+    h1 {text-indent:40px;}
+</style>
+<h1><a href="/">Блог СДО JLPT</a></h1>
+
+<br><br>
+<div class="row">
+{% block base %} {% endblock %}
+{% block article %}{% endblock %}
+{% block login %}{% endblock %}
+
+</div>
+<div id="hmenu">
+<ul>
+  <li><a href="{% url 'article.views.articles' %}">Блог</a></li>
+  <li><a href="{% url 'clnd:main' %}">Календарь</a></li>
+
+
+</ul>
+</div>
+</body>
+</html>
