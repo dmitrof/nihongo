@@ -12,6 +12,26 @@ from uuid import uuid4
 from tutor.cardbuilder import CardBuilder
 from tutor.rules import RulesProvider
 
+class TutorGroupsList(View):
+    template_name = 'tutor/tutor_groups_list.html'
+    tutor_uid = 'user_sakuratutor'
+    c = Bucket('couchbase://localhost/nihongo')
+
+    def get(self, request, user_uid):
+        c = self.c
+        tutor_doc = c.get(user_uid)
+
+        nq = N1QLQuery('SELECT * FROM `nihongo` WHERE tutor_uid=$tutor_uid', tutor_uid = user_uid)
+        groups_list = []
+        for row in c.n1ql_query(nq):
+            print(row)
+            groups_list.append(row)
+
+        #print(tutor_doc)
+
+        return HttpResponse(tutor_doc)
+
+
 class GroupDecksList(View):
     template_name = 'tutor/group_decks_list.html'
     group_id = 'g_sakura'
@@ -224,13 +244,14 @@ class EditCard(View):
 
 
         for param in request.POST:
-            print(param + " " + request.POST[param])
+            pass
+            #print(param + " " + request.POST[param])
 
         #words = request.POST.getlist("word[]")
         cardBuilder = CardBuilder();
         pages = request.POST.getlist("pages[]")
         card_to_save = cardBuilder.processPOST(pages, request.POST)
-        print(cardBuilder.processPOST(pages, request.POST))
+        #print(cardBuilder.processPOST(pages, request.POST))
         c.upsert(card_id, card_to_save)
 
         #for word in words:
