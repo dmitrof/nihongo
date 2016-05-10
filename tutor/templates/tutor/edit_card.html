@@ -1,6 +1,10 @@
+{% extends 'main2.html' %}
+
 {% load staticfiles %}
 
-<body>
+{% block tutor %}
+
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 <h3>Карточка "{{card.doc_name}}"</h3>
 <div id="edit_pane">
@@ -36,5 +40,7 @@
 
 </div>
 
-</body>
-</html>
+
+
+
+{% endblock %}

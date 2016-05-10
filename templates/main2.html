@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Блог СДО JLPT</title>
+    <title>Nihongo Tutor</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/foundation.css' %}">
 </head>
 <body>
@@ -21,15 +21,17 @@
 <style>
     h1 {text-indent:40px;}
 </style>
-<h1><a href="/">Блог СДО JLPT</a></h1>
+<h1><a href="/">СДО Nihongo Tutor</a></h1>
 
 <br><br>
 <div class="row">
-{% block base %} {% endblock %}
-{% block article %}{% endblock %}
-{% block login %}{% endblock %}
 
+
+{% block login %}{% endblock %}
+{% block tutor %}{% endblock %}
 </div>
+
+{% comment %}
 <div id="hmenu">
 <ul>
   <li><a href="{% url 'article.views.articles' %}">Блог</a></li>
@@ -38,5 +40,7 @@
 
 </ul>
 </div>
+
+{% endcomment %}
 </body>
 </html>

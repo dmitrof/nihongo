@@ -1,5 +1,9 @@
+{% extends 'main2.html' %}
+
 {% load staticfiles %}
-<body>
+
+{% block tutor %}
+
 <h3>Стопка "{{deck.description}}"</h3>
     {% for card in cards_set %}
     <ul>{{card}}</ul>
@@ -20,4 +24,6 @@
 
     </div>
 
-</body>
+
+
+{% endblock %}

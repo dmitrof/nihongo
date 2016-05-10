@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.views.generic import View
 from django.conf.urls import patterns, include, url
 from couchbase.bucket import Bucket
@@ -16,21 +16,28 @@ from tutor.rules import RulesProvider
 
 
 class TutorGroupsList(LoginRequiredMixin, View):
+    LOGIN_URL = 'loginsys.views.login'
     template_name = 'tutor/tutor_groups_list.html'
     tutor_uid = 'user_sakuratutor'
     c = Bucket('couchbase://localhost/nihongo')
-    @login_required()
-    def get(self, request, user_uid):
+
+    def get(self, request):
         c = self.c
-        tutor_doc = c.get(user_uid)
+        user_uid = 'user_' + request.user.username
+        print(user_uid)
+        try:
+            tutor_doc = c.get(user_uid)
+        except Exception as e:
+            raise Http404('couchbaseeror')
         tutor_uid = tutor_doc.key
         tutor_doc = tutor_doc.value
 
-        nq = N1QLQuery('SELECT * FROM `nihongo` WHERE tutor_uid=$tutor_uid', tutor_uid = user_uid)
+        nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and tutor_uid=$tutor_uid', tutor_uid = user_uid, doc_type='group_doc')
         groups_list = []
         for row in c.n1ql_query(nq):
-            print(row)
+            #print(row)
             group = row['nihongo']
+            group['id'] = row['id']
             groups_list.append(group)
 
         #print(tutor_doc)
@@ -40,17 +47,52 @@ class TutorGroupsList(LoginRequiredMixin, View):
         })
 
 
+    def post(self, request):
+        c = self.c
+        user_uid = 'user_' + request.user.username
+        if 'create_group' in request.POST:
+            print("CREATING NEW GROUP")
+            group_name = request.POST.get('group_name', 'Sample Name')
+            description = request.POST.get('group_description', 'Sample Description')
+            group_id = 'group_' + group_name + '_' + str(uuid4()).replace('-', '_')
+            group = {'doc_type' : 'group_doc', 'tutor_uid' : user_uid, 'group_name' : group_name, 'description' : description}
+            group['doc_channels'] = [group_id]
+            group['decks_list'] = []
+            try:
+                c.upsert(group_id, group)
+            except CouchbaseError as e:
+                raise Http404('couchbaseeror')
+            print(group)
+        elif 'delete_group' in request.POST:
+            print("DELTEING GROUP")
+            group_id = request.POST['group_id']
+            try:
+                c.delete(group_id)
+            except CouchbaseError as e:
+                raise Http404('couchbaseerror')
 
-class GroupDecksList(View):
+
+        else:
+            print("NOTHING HAPPENS")
+
+
+        return HttpResponseRedirect(reverse('tutor:tutor_groups'))
+
+
+
+
+class GroupDecksList(LoginRequiredMixin, View):
     template_name = 'tutor/group_decks_list.html'
-    group_id = 'g_sakura'
-    constgroup = 'sakura'
+    #group_id = 'g_sakura'
+    #constgroup = 'sakura'
     #def __init__(self):
         #self.template_name = 'tutor/group_decks_list.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, group_id):
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+
         c = Bucket('couchbase://localhost/nihongo')
-        group = c.get('g_sakura').value
+        group = c.get(group_id).value
         group_decks = group.get('decks_list')
         decks_list = []
         for d in group_decks:
@@ -60,31 +102,33 @@ class GroupDecksList(View):
             except CouchbaseError:
                 pass
         return render(request, self.template_name, {
-            'pr': "hello, костыль", 'decks_list' : decks_list,  'group' : group.get('group_name')
+             'decks_list' : decks_list,  'group' : group.get('group_name'), 'group_id' : group_id
         })
 
-    def post(self, request,  *args, **kwargs):
+    def post(self, request, group_id):
         c = Bucket('couchbase://localhost/nihongo')
         success = 'dunno'
+        constgroup = group_id.rsplit('_', 1)[0]
+        print(constgroup)
         print('adding new deck')
         try:
             description = request.POST['description']
             print(description)
-            ckey = 'd_' + self.constgroup + '_' + str(uuid4()).replace('-', '_')
+            ckey = 'deck_' + str(uuid4()).replace('-', '_')
 
             newdeck = {'doc_type' : 'deck', 'description' : description, 'deck_name' : description}
             newdeck['cards_list'] = [];
             c.insert(ckey, newdeck)
-            group = c.get(self.group_id).value
+            group = c.get(group_id).value
             print(group.get('decks_list'))
             group.get('decks_list').append(ckey)
-            c.upsert(self.group_id, group)
+            c.upsert(group_id, group)
             success = 'success'
         except (BaseException, CouchbaseError) as e:
             success = 'error'
             print(e)
 
-        group = c.get(self.group_id).value
+        group = c.get(group_id).value
         group_decks = group.get('decks_list')
         decks_list = []
         for d in group_decks:
@@ -93,34 +137,31 @@ class GroupDecksList(View):
                 decks_list.append(deck)
             except CouchbaseError:
                 pass
-        return render(request, 'tutor/group_decks_list.html', {
-            'decks_list' : decks_list,  'group' : group.get('group_name'), 'success' : success
-        })
-        #return HttpResponse('ok')
+        return HttpResponseRedirect(reverse('tutor:group_decks', kwargs={'group_id' : group_id}))
 
-class GroupDecksDelete(View):
+
+class GroupDecksDelete(LoginRequiredMixin, View):
     template_name = 'tutor/group_decks_list.html'
-    group_id = 'g_sakura'
     constgroup = 'sakura'
     #def __init__(self):
         #self.template_name = 'tutor/group_decks_list.html'
 
-    def post(self, request, deck_key,  *args, **kwargs):
+    def post(self, request, group_id, deck_id):
         c = Bucket('couchbase://localhost/nihongo')
         success = 'dunno'
         print('deleting deck')
         try:
-            c.delete(deck_key)
-            group = c.get(self.group_id).value
+            c.delete(deck_id)
+            group = c.get(group_id).value
             print(group.get('decks_list'))
-            group.get('decks_list').remove(deck_key)
-            c.upsert(self.group_id, group)
+            group.get('decks_list').remove(deck_id)
+            c.upsert(group_id, group)
             success = 'success'
         except (BaseException, CouchbaseError) as e:
             success = 'error'
             print(e)
 
-        group = c.get(self.group_id).value
+        group = c.get(group_id).value
         group_decks = group.get('decks_list')
         decks_list = []
         for d in group_decks:
@@ -129,16 +170,14 @@ class GroupDecksDelete(View):
                 decks_list.append(deck)
             except CouchbaseError:
                 pass
-        return render(request, 'tutor/group_decks_list.html', {
-            'decks_list' : decks_list,  'group' : group.get('group_name'), 'success' : success
-        })
+        return HttpResponseRedirect(reverse('tutor:group_decks', kwargs={'group_id' : group_id}))
 
 
 
 
-class DeckDetail(View):
+class DeckDetail(LoginRequiredMixin, View):
 
-    def get(self, request, deck_id, *args, **kwargs):
+    def get(self, request, group_id, deck_id):
         response = "hello, {}".format(deck_id)
         b = Bucket('couchbase://localhost/nihongo')
         deck = b.get(deck_id)
@@ -164,10 +203,10 @@ class AddCardToDeck(View):
     def post(self, request):
         pass
 
-class DeckEdit(View):
-    template_name = 'tutor/deck_deatil.html'
+class DeckEdit(LoginRequiredMixin, View):
+    #template_name = 'tutor/deck_detail.html'
 
-    def post(self, request, deck_id, *args, **kwargs):
+    def post(self, request, group_id, deck_id, *args, **kwargs):
         c = Bucket('couchbase://localhost/nihongo')
         success = 'dunno'
         if 'delete_card' in request.POST:
@@ -182,19 +221,19 @@ class DeckEdit(View):
             except (BaseException, CouchbaseError) as e:
                 success = 'error'
                 print(e)
-            return HttpResponseRedirect(reverse('tutor:deck_detail', kwargs={'deck_id' : deck_id}))
+            return HttpResponseRedirect(reverse('tutor:deck_detail', kwargs={'group_id' : group_id,'deck_id' : deck_id}))
         if 'edit_card' in request.POST:
             try:
                 card_id = request.POST['card_id']
-                return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'card_id' : card_id}))
+                return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'group_id' : group_id, 'card_id' : card_id}))
             except BaseException as e:
                 print(e)
 
 
-class EditCard(View):
+class EditCard(LoginRequiredMixin, View):
     template_name = 'tutor/edit_card.html'
 
-    def get(self, request, card_id):
+    def get(self, request, group_id, card_id):
         rulesProvider = RulesProvider()
         availablePages = rulesProvider.provideTemplateList()
         task_types = rulesProvider.provideTaskTypeList()

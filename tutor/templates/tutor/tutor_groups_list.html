@@ -1,25 +1,43 @@
-
+{% extends "main2.html" %}
 
 {%load staticfiles%}
 
+{% block tutor %}
 <link rel="stylesheet" type="text/css" href="{% static 'tutor/style.css' %}" />
-<p>Группы преподавателя  <b>{{tutor_doc.name}}</b></p>
+<p>Группы преподавателя  <b>{{tutor_doc.username}}</b></p>
 <br>
 <br>
 {% for group in groups_list %}
+
 <div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
     Описание:  <b>{{group.decks_list|length}}</b>   <br>
     Количество стопок карточек:    <b>{{group.decks_list|length}}</b>     <br>
-    {% comment %}<a href="{% url 'tutor:deck_detail' deck.key %}">{{deck.key}} </a>
-    <form name="delete_deck" method="post" action="{% url 'tutor:group_decks_delete' deck.key %}">
+    <a href="{% url 'tutor:group_decks' group.id %}">К списку колод</a><br>
+    <form name="delete_group" method="post" action="{% url 'tutor:tutor_groups'%}">
         {% csrf_token %}
-    <input type="submit" value="Delete" />
+        <input type="hidden" name="group_id" value="{{group.id}}" />
+        <input type="submit" name="delete_group" value="Удалить" />
     </form>
-    {% endcomment %}
+
 </div>
 <br>
 
 {% endfor%}
+
+Создать новую группу
+<br><br>
+<form action="{% url 'tutor:tutor_groups' %}" name="create_group" method="post">
+    {% csrf_token %}
+    <label>
+        Название/номер группы<br><input type="text" name="group_name"/>
+    </label><br>
+    <label>
+        Описание группы<br><input type="text" name="group_description"/>
+    </label><br>
+    <input type="submit" name="create_group" value="Создать"/>
+
+</form>
+
 
 
 {% comment %}
@@ -35,4 +53,6 @@
 <h3 class="transact_status">{{success}}{{success}}</h3>
 {% endif %}
 {% endcomment %}
+
+{% endblock %}
 

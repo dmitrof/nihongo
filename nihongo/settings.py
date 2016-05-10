@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'nihongo_tutor',
     'django_cbtools',
-    'tutor'
+    'tutor',
+    'loginsys'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -69,14 +70,27 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+LOGIN_URL = '/auth/login/'
+
+
 ROOT_URLCONF = 'nihongo.urls'
 
 #TEMPLATE_DEBUG = True
 
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'templates'),
+    os.path.join(BASE_DIR, 'tutor', 'templates'),
+    os.path.join(BASE_DIR, 'loginsys', 'templates'),
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/templates/'],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+                os.path.join(BASE_DIR, 'tutor', 'templates'),
+                os.path.join(BASE_DIR, 'loginsys', 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
