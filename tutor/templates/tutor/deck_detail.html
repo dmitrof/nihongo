@@ -7,7 +7,7 @@
 <h3>Стопка "{{deck.description}}"</h3>
     {% for card in cards_set %}
     <ul>{{card}}</ul>
-    <form name="delete_card" method="post" action="{% url 'tutor:delete_card_from_deck' deck_id %}">
+    <form name="delete_card" method="post" action="{% url 'tutor:deck_edit' group_id deck_id %}">
         {% csrf_token %}
     <input type = "hidden" name="card_id" value={{card.key}} />
     <input type="submit" name="delete_card" value="Удалить из стопки" />
@@ -17,9 +17,18 @@
 {% endfor %}
     <div id="add_card">
         <label>Меню добавления новых карточек</label>
-        <form name="create_card_in_deck" method="get" action="{% url 'tutor:create_card_in_deck' deck_id %}">
+        <form name="create_card" method="post" action="{% url 'tutor:deck_edit' group_id deck_id %}">
         {% csrf_token %}
-        <input type="submit" value="add_card" />
+
+        <select name="task_type" id="new_side_select" class="side_select">
+            {% for t_page, text in task_types.items %}
+                <option value="{{t_page}}" {% if t_page == "kanjicard" %}selected="selected"{% endif %}>
+                   {{text}}
+                </option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="deck_id" value="{{deck_id}}" />
+        <input type="submit" name="create_card" value="добавить карточку" />
         </form>
 
     </div>

@@ -247,7 +247,7 @@ $(document).ready(function() {
         //var sides_num = sides_array.length;
         var cardside = $(".edit_item:not(.meta_edit)").length;
         var template_name = $("#new_side_select").val() + "_chunk.html";
-        alert(template_name);
+        //alert(template_name);
         var lvl = $("#info_lvl").val();
         var sides_number = cardside + 1;
         $.get('/tutor/get_chunk/', {template_name : template_name,  cardside : cardside, lvl : lvl, sides_number : sides_number}, function(sideData) {

@@ -9,7 +9,7 @@ from couchbase.bucket import Bucket
 from couchbase.views.iterator import View as CView
 from couchbase.views.params import Query
 from couchbase.n1ql import N1QLQuery, N1QLError
-from couchbase.exceptions import CouchbaseError
+from couchbase.exceptions import CouchbaseError, NotFoundError
 from uuid import uuid4
 from tutor.cardbuilder import CardBuilder
 from tutor.rules import RulesProvider
@@ -114,10 +114,10 @@ class GroupDecksList(LoginRequiredMixin, View):
         try:
             description = request.POST['description']
             print(description)
-            ckey = 'deck_' + str(uuid4()).replace('-', '_')
+            ckey = 'deck_' + constgroup + '_' + str(uuid4()).replace('-', '_')
 
             newdeck = {'doc_type' : 'deck', 'description' : description, 'deck_name' : description}
-            newdeck['cards_list'] = [];
+            newdeck['cards_list'] = []
             c.insert(ckey, newdeck)
             group = c.get(group_id).value
             print(group.get('decks_list'))
@@ -190,9 +190,12 @@ class DeckDetail(LoginRequiredMixin, View):
             except CouchbaseError:
                 pass
 
+        rulesProvider = RulesProvider()
+
+        task_types = rulesProvider.provideTaskTypeList()
         #return HttpResponse(response)
-        return render(request, 'tutor/deck_detail.html', {
-            'deck_id' : deck_id, 'deck' : deck.value, 'cards_set' : cards_set
+        return render(request, 'tutor/deck_detail.html', { 'group_id' : group_id,
+            'deck_id' : deck_id, 'deck' : deck.value, 'cards_set' : cards_set, 'task_types' : task_types,
         })
 
 
@@ -225,29 +228,61 @@ class DeckEdit(LoginRequiredMixin, View):
         if 'edit_card' in request.POST:
             try:
                 card_id = request.POST['card_id']
-                return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'group_id' : group_id, 'card_id' : card_id}))
+                return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'group_id' : group_id, 'deck_id' : deck_id, 'card_id' : card_id}))
             except BaseException as e:
                 print(e)
+                raise Http404()
+        if 'create_card' in request.POST:
+            print("CREATING A NEW CARD IN DECK")
+            try:
+                task_type = request.POST['task_type']
+                card_id = 'card_'  + str(uuid4()).replace('-', '_')
+                print("SUCESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss")
+                return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'group_id' : group_id, 'deck_id' : deck_id, 'card_id' : card_id, 'is_new' : True, 'task_type' : task_type}))
+            except (BaseException, CouchbaseError) as e:
+                print(e)
+                raise Http404(e)
+
+        else:
+            print("nothing happened")
+            return HttpResponseRedirect(reverse('tutor:deck_detail', kwargs={'group_id' : group_id,'deck_id' : deck_id}))
+            #return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'group_id' : group_id, 'card_id' : card_id}))
+
 
 
 class EditCard(LoginRequiredMixin, View):
     template_name = 'tutor/edit_card.html'
+    c = Bucket('couchbase://localhost/nihongo')
+    def get(self, request, group_id, deck_id, card_id, is_new = False, task_type = False):
+        c = self.c
+        if 'cancel_changes' in request.GET:
+            #print("CANCEL CHANGES")
+            return HttpResponseRedirect(reverse('tutor:deck_detail', kwargs={'group_id' : group_id,'deck_id' : deck_id}))
 
-    def get(self, request, group_id, card_id):
         rulesProvider = RulesProvider()
         availablePages = rulesProvider.provideTemplateList()
         task_types = rulesProvider.provideTaskTypeList()
+
+        #deck['cards_list'].append(card_id)
+        #c.upsert(deck_id, deck)
         #print(task_types)
         #for template in available:
             #print(template)
-        c = Bucket('couchbase://localhost/nihongo')
-        card = c.get(card_id).value
+
+        try:
+            card = c.get(card_id).value
+
+        except NotFoundError:
+
+
+            card = {'content' : [], 'card_info' : {'lvl' : 'N5', 'task_type' : task_type}}
         card_sides = card.get('content')
+        card_info = card.get('card_info')
         pages = []
         template_dict = {}
         sides_number = 0
         info_dict = {}
-        card_info = card.get('card_info')
+
         for info in card_info:
             info_dict[info] = card_info.get(info)
         template_dict['card_info'] = info_dict
@@ -272,25 +307,25 @@ class EditCard(LoginRequiredMixin, View):
             page['pageName'] = 'tutor/' + side.get('item_type') + '.html'
             page['cardside'] = side.get('cardside')
             pages.append(page)
-
-
         sides_list = sorted(sides_list, key = lambda side:side['cardside'])
 
         #print(pages)
+        template_dict['task_type'] = task_type
         template_dict['task_types'] = task_types
         template_dict['sides_list'] = sides_list
         template_dict['sides_number'] = sides_number
         template_dict['card'] = card
         template_dict['card_id'] = card_id
-
+        template_dict['deck_id'] = deck_id
+        if is_new:
+            template_dict['is_new'] = is_new
+        template_dict['group_id'] = group_id
         return render(request, self.template_name, template_dict)
     #This method gets changes in card structure and updates DB
-    def post(self, request, card_id):
+
+    def post(self, request, group_id, deck_id, card_id, is_new = False):
         post_par = []
         c = Bucket('couchbase://localhost/nihongo')
-
-
-
         for param in request.POST:
             pass
             #print(param + " " + request.POST[param])
@@ -299,13 +334,22 @@ class EditCard(LoginRequiredMixin, View):
         cardBuilder = CardBuilder();
         pages = request.POST.getlist("pages[]")
         card_to_save = cardBuilder.processPOST(pages, request.POST)
+
+        is_new = request.POST.get('is_new', False)
+        if is_new:
+            deck = c.get(deck_id).value
+            print(deck.get('cards_list'))
+            deck['cards_list'].append(card_id)
+            c.upsert(deck_id, deck)
+
+
         #print(cardBuilder.processPOST(pages, request.POST))
         c.upsert(card_id, card_to_save)
 
         #for word in words:
          #   print(word)
 
-        return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'card_id' : card_id}))
+        return HttpResponseRedirect(reverse('tutor:edit_card', kwargs={'group_id' : group_id, 'deck_id' : deck_id,'card_id' : card_id}))
 
 class CreateCard(View):
     pass

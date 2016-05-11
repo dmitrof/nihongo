@@ -7,10 +7,14 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 <h3>Карточка "{{card.doc_name}}"</h3>
+<a href="{% url 'tutor:deck_detail' group_id deck_id %}">Назад к колоде </a>
 <div id="edit_pane">
-<form class="card_form" action="" method="post">
-    {% include "tutor/card_info_edit.html" %}
 
+<form class="card_form" action="{% url 'tutor:edit_card' group_id deck_id card_id %}" method="post">
+    {% include "tutor/card_info_edit.html" %}
+    {% if is_new %}
+    <input type="hidden" name="is_new" value="True">
+    {% endif %}
     <input type="hidden" name="info_lvl" id="info_lvl" value="{{card_info.lvl}}">
     <input type="hidden" name="info_sides_number" id="info_sides_number" value="{{sides_number}}">
     {% csrf_token %}
@@ -35,6 +39,15 @@
 
     <input type="submit" name="edit_side" value="Подтвердить изменения"/>
 </form>
+
+        <form name="cancel_card" method="get" action="{% url 'tutor:edit_card' group_id deck_id card_id%}">
+            {% csrf_token %}
+            <input type="hidden" name="deck_id" value="{{deck_id}}" />
+
+                <input type="submit" name="cancel_changes" value="Отменить изменения" />
+
+        </form>
+
 <script src="{% static 'js/jquery-1.12.1.js' %}"></script>
 <script src="{% static 'js/edit_card.js' %}"></script>
 
