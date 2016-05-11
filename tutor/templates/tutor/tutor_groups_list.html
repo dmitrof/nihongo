@@ -38,21 +38,8 @@
 
 </form>
 
-
-
-{% comment %}
-<form action="{% url 'tutor:group_decks' %}" method="post">
-    {% csrf_token %}
-    <input type="text" name="description" id="desc_field"/>
-    <input type="submit" value="add_deck"/>
-</form>
-{% if success == "fail" %}
-<h3 class="transact_status">{{success}}</h3>
-{% endif %}
-{% if success == "success" %}
-<h3 class="transact_status">{{success}}{{success}}</h3>
-{% endif %}
-{% endcomment %}
+<br>
+{% include 'tutor/attendable_groups.html' %}
 
 {% endblock %}
 

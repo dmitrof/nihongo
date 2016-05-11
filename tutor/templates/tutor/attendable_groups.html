@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div id="attendable_groups">
+    <br>
+    Учебные группы, к которым вы присоединились/пытались присоединиться
+    <br>
 
-</body>
-</html>
+
+    {% for group in r_groups_list %}
+    <div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
+        Описание:  <b>{{group.decks_list|length}}</b>   <br>
+        Количество стопок карточек:    <b>{{group.decks_list|length}}</b>     <br>
+        Статус запроса: {% if group.confirmed == 'confirmed' %}вы приняты в группу
+            {% elif group.confirmed == 'declined' %}вам отказали {% else %} ожидание {% endif %}
+
+
+    </div>
+    {% endfor %}
+    <br>
+    Учебные группы, к которым вы можете присоединиться:
+    <br>
+    {% for group in a_groups_list %}
+    <div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
+        Описание:  <b>{{group.decks_list|length}}</b>   <br>
+        Количество стопок карточек:    <b>{{group.decks_list|length}}</b>     <br>
+        <form name="request_invite" method="post" action="{% url 'tutor:request_invite' tutor_uid group.id %}">
+            {% csrf_token %}
+            <input type="text" name="request_text" value="" />
+            <input type="submit" name="request_invite_btn" value="Присоединиться" />
+        </form>
+
+    </div>
+    {% endfor %}
+    <br>
+
+
+
+
+</div>

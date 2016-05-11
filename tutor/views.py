@@ -28,22 +28,52 @@ class TutorGroupsList(LoginRequiredMixin, View):
         try:
             tutor_doc = c.get(user_uid)
         except Exception as e:
-            raise Http404('couchbaseeror')
+            raise Http404(e)
         tutor_uid = tutor_doc.key
         tutor_doc = tutor_doc.value
 
-        nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and tutor_uid=$tutor_uid', tutor_uid = user_uid, doc_type='group_doc')
+        invite_requests = []
+
         groups_list = []
+        a_groups_list = []
+        r_groups_list = []
+
+        nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and user_id=$tutor_uid', tutor_uid = user_uid, doc_type='invite_request')
+        for row in c.n1ql_query(nq):
+            ir = row['nihongo']
+            ir['id'] = row['id']
+            invite_requests.append(ir)
+
+        for ir in invite_requests:
+            group = c.get(ir['group_id']).value
+            group['confirmed'] = ir['confirmed']
+            r_groups_list.append(group)
+
+
+        c_view = CView(c, "nihongo", "all_groups")
+        for row in c_view:
+            group = row.value
+            group['id'] = row.docid
+            #print(row.value)
+            if row.key == user_uid:
+                groups_list.append(group)
+            else:
+                a_groups_list.append(group)
+
+
+        """nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and tutor_uid=$tutor_uid', tutor_uid = user_uid, doc_type='group_doc')
+
         for row in c.n1ql_query(nq):
             #print(row)
             group = row['nihongo']
             group['id'] = row['id']
-            groups_list.append(group)
+            groups_list.append(group)"""
 
         #print(tutor_doc)
 
         return render(request, self.template_name, { 'tutor_uid' : tutor_uid,
-            'tutor_doc' : tutor_doc, 'groups_list' : groups_list,
+            'tutor_doc' : tutor_doc, 'groups_list' : groups_list, 'a_groups_list' : a_groups_list,
+            'r_groups_list' : r_groups_list
         })
 
 
@@ -69,7 +99,7 @@ class TutorGroupsList(LoginRequiredMixin, View):
             try:
                 c.delete(group_id)
             except CouchbaseError as e:
-                raise Http404('couchbaseerror')
+                raise Http404(e)
 
 
         else:
@@ -79,6 +109,17 @@ class TutorGroupsList(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse('tutor:tutor_groups'))
 
 
+
+def request_invite(request, user_id, group_id):
+    default = 'request for invite from' + user_id
+    request_text = request.POST.get('request_text', default)
+    c = Bucket('couchbase://localhost/nihongo')
+    invite_request = {'doc_type' : 'invite_request', 'user_id' : user_id, 'group_id' : group_id}
+    invite_request['request_text'] = request_text
+    invite_request['confirmed'] = "pending"
+    ireq ='ireq_'  + str(uuid4()).replace('-', '_')
+    c.upsert(ireq, invite_request)
+    return HttpResponseRedirect(reverse('tutor:tutor_groups'))
 
 
 class GroupDecksList(LoginRequiredMixin, View):
