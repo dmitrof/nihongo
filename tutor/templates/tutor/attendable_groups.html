@@ -2,13 +2,13 @@
     <br>
     Учебные группы, к которым вы присоединились/пытались присоединиться
     <br>
-
+    <br>
 
     {% for group in r_groups_list %}
     <div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
         Описание:  <b>{{group.decks_list|length}}</b>   <br>
         Количество стопок карточек:    <b>{{group.decks_list|length}}</b>     <br>
-        Статус запроса: {% if group.confirmed == 'confirmed' %}вы приняты в группу
+        Статус запроса: {% if group.confirmed == 'accepted' %}вы приняты в группу
             {% elif group.confirmed == 'declined' %}вам отказали {% else %} ожидание {% endif %}
 
 
@@ -16,7 +16,7 @@
     {% endfor %}
     <br>
     Учебные группы, к которым вы можете присоединиться:
-    <br>
+    <br><br>
     {% for group in a_groups_list %}
     <div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
         Описание:  <b>{{group.decks_list|length}}</b>   <br>
@@ -30,6 +30,8 @@
     </div>
     {% endfor %}
     <br>
+
+
 
 
 

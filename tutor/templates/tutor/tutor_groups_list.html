@@ -22,7 +22,26 @@
 </div>
 <br>
 
+<!-- Заявки и приглашения-->
 {% endfor%}
+
+{% for ir in inc_requests %}
+    <div class="inc_request_item">
+        Запрос от {{ir.user_id}}:
+
+        <div class="request_text">
+            {{ir.request_text}}
+        </div>
+        <form name="confirm_ir" method="post" action="{% url 'tutor:confirm_ir' ir.id ir.group_id ir.user_id%}">
+        {% csrf_token %}
+            <input type="text" name="confirm_text" value="" />
+            <input type="submit" name="accept" value="Подтвердить" />
+            <input type="submit" name="decline" value="Отклонить" />
+        </form>
+    </div>
+{% endfor %}
+
+<br>
 
 Создать новую группу
 <br><br>

@@ -6,10 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
 
 from couchbase.bucket import Bucket
-from couchbase.views.iterator import View as CView
-from couchbase.views.params import Query
-from couchbase.n1ql import N1QLQuery, N1QLError
 from couchbase.exceptions import CouchbaseError
+from django_cbtools.sync_gateway import SyncGateway
 
 
 
@@ -45,6 +43,7 @@ def register(request):
             newuser_form.save()
             newuser = auth.authenticate(username=newuser_form.cleaned_data['username'], password=newuser_form.cleaned_data['password2'])
             auth.login(request, newuser)
+            #Adding user to main bucket
             try:
                 c = Bucket('couchbase://localhost/nihongo')
                 username = newuser_form.cleaned_data['username']
@@ -56,7 +55,8 @@ def register(request):
                 c.upsert(c_username, new_user)
             except CouchbaseError as ce:
                 raise Http404("Couchbase server error")
-
+            #Adding user to sync gateway database
+            SyncGateway.put_user(c_username, 'some@email.com', password, [c_username])
             return redirect('/')
         else:
             args['form'] = newuser_form

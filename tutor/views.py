@@ -13,6 +13,7 @@ from couchbase.exceptions import CouchbaseError, NotFoundError
 from uuid import uuid4
 from tutor.cardbuilder import CardBuilder
 from tutor.rules import RulesProvider
+from django_cbtools.sync_gateway import SyncGateway
 
 
 class TutorGroupsList(LoginRequiredMixin, View):
@@ -32,17 +33,25 @@ class TutorGroupsList(LoginRequiredMixin, View):
         tutor_uid = tutor_doc.key
         tutor_doc = tutor_doc.value
 
-        invite_requests = []
-
+        invite_requests = [] #this user's invite requests
+        inc_requests = [] #incoming invite requests
         groups_list = []
+        group_ids = []
         a_groups_list = []
         r_groups_list = []
+        requested = []
+
+
+
+
+
 
         nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and user_id=$tutor_uid', tutor_uid = user_uid, doc_type='invite_request')
         for row in c.n1ql_query(nq):
             ir = row['nihongo']
             ir['id'] = row['id']
             invite_requests.append(ir)
+            requested.append(ir['group_id'])
 
         for ir in invite_requests:
             group = c.get(ir['group_id']).value
@@ -55,11 +64,19 @@ class TutorGroupsList(LoginRequiredMixin, View):
             group = row.value
             group['id'] = row.docid
             #print(row.value)
+
+
             if row.key == user_uid:
                 groups_list.append(group)
-            else:
+                group_ids.append(row.docid)
+            elif not (group['id'] in requested):
                 a_groups_list.append(group)
 
+        nq1 = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and confirmed=$confirmed and (group_id in $groupids)', doc_type='invite_request', groupids = group_ids, confirmed = 'pending')
+        for row in c.n1ql_query(nq1):
+            ir = row['nihongo']
+            ir['id'] = row['id']
+            inc_requests.append(ir)
 
         """nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and tutor_uid=$tutor_uid', tutor_uid = user_uid, doc_type='group_doc')
 
@@ -73,7 +90,7 @@ class TutorGroupsList(LoginRequiredMixin, View):
 
         return render(request, self.template_name, { 'tutor_uid' : tutor_uid,
             'tutor_doc' : tutor_doc, 'groups_list' : groups_list, 'a_groups_list' : a_groups_list,
-            'r_groups_list' : r_groups_list
+                'r_groups_list' : r_groups_list, 'inc_requests' : inc_requests,
         })
 
 
@@ -84,7 +101,7 @@ class TutorGroupsList(LoginRequiredMixin, View):
             print("CREATING NEW GROUP")
             group_name = request.POST.get('group_name', 'Sample Name')
             description = request.POST.get('group_description', 'Sample Description')
-            group_id = 'group_' + group_name + '_' + str(uuid4()).replace('-', '_')
+            group_id = 'group_' + str(uuid4()).replace('-', '_')
             group = {'doc_type' : 'group_doc', 'tutor_uid' : user_uid, 'group_name' : group_name, 'description' : description}
             group['doc_channels'] = [group_id]
             group['decks_list'] = []
@@ -109,7 +126,7 @@ class TutorGroupsList(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse('tutor:tutor_groups'))
 
 
-
+@login_required()
 def request_invite(request, user_id, group_id):
     default = 'request for invite from' + user_id
     request_text = request.POST.get('request_text', default)
@@ -119,6 +136,33 @@ def request_invite(request, user_id, group_id):
     invite_request['confirmed'] = "pending"
     ireq ='ireq_'  + str(uuid4()).replace('-', '_')
     c.upsert(ireq, invite_request)
+    return HttpResponseRedirect(reverse('tutor:tutor_groups'))
+
+@login_required()
+def confirm_ir(request, ir_id, group_id, user_id):
+    print("IR CONFIRMATION")
+    c = Bucket('couchbase://localhost/nihongo')
+    user_doc = c.get(user_id).value
+    password = user_doc['password']
+    ir_doc = c.get(ir_id).value
+
+
+    if 'accept' in request.POST:
+        print("IR ACCEPTED")
+        ir_doc['confirmed'] = 'accepted'
+        sync_user = SyncGateway.get_user(user_id)
+        new_sync_user = {}
+        admin_channels = sync_user['admin_channels']
+        #all_channels = sync_user['all_channels']
+        admin_channels.append(group_id)
+
+        SyncGateway.put_user(sync_user['name'], 'somemail@gmail.com', password, admin_channels)
+        print(sync_user)
+
+    elif 'decline' in request.POST:
+        ir_doc['confirmed'] = 'declined'
+        print("IR DECLINED")
+    c.upsert(ir_id, ir_doc)
     return HttpResponseRedirect(reverse('tutor:tutor_groups'))
 
 
@@ -155,7 +199,7 @@ class GroupDecksList(LoginRequiredMixin, View):
         try:
             description = request.POST['description']
             print(description)
-            ckey = 'deck_' + constgroup + '_' + str(uuid4()).replace('-', '_')
+            ckey = 'deck_' + str(uuid4()).replace('-', '_')
 
             newdeck = {'doc_type' : 'deck', 'description' : description, 'deck_name' : description}
             newdeck['cards_list'] = []
