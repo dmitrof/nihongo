@@ -429,6 +429,7 @@ class EditCard(LoginRequiredMixin, View):
 
 
         #print(cardBuilder.processPOST(pages, request.POST))
+        card_to_save['doc_channels'] = [group_id]
         c.upsert(card_id, card_to_save)
 
         #for word in words:
