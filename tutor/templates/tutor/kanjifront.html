@@ -38,7 +38,7 @@
         {% comment %}
 
         {% endcomment %}
-        <br>
+
 
     </div>
 
@@ -52,20 +52,20 @@
     </select>
     <div class="kanjifront_form card_form">
 
-        <br>
+
 
         <input type="hidden" name="pages[]" value="kanjifront_s{{side.cardside}}"/>
 
         <label>Кандзи</label>
-        <input type="text" name="kanji_s{{side.cardside}}" value="{{side.kanji}}" class="kanji_edit"/><br>
+        <input type="text" name="kanji_s{{side.cardside}}" value="{{side.kanji}}" class="kanji_edit"/>
 
         <label >Kun</label>
-        <input type="text" name="kuns_s{{side.cardside}}" value="{% for kun in side.kun %} {{kun}}, {%endfor%}" class="kun_edit"/><br>
+        <input type="text" name="kuns_s{{side.cardside}}" value="{% for kun in side.kun %} {{kun}}, {%endfor%}" class="kun_edit"/>
 
         <label >On</label>
-        <input type="text" name="ons_s{{side.cardside}}" value="{% for on in side.on %} {{on}}, {%endfor%}" class="on_edit"/><br>
+        <input type="text" name="ons_s{{side.cardside}}" value="{% for on in side.on %} {{on}}, {%endfor%}" class="on_edit"/>
 
-        <div class="words_edit"> Слова-примеры <br>
+        <div class="words_edit"> <h5>Слова-примеры </h5><br>
             <input type="hidden" name="words_num_s{{side.cardside}}" value="{{side.words|length}}"/>
             {% for wordItem in side.words %}
                 <div class="word_item_edit" id="word_item_edit_{{forloop.counter}}_s{{side.cardside}}">
@@ -73,10 +73,11 @@
                     <input type="text" name="word_s{{side.cardside}}[]" value="{{wordItem.word}}" class="word_edit" />
                     <label >Написание</label>
                     <input type="text" name="word_kun_s{{side.cardside}}[]" value="{{wordItem.word_kun}}" class="word_kun_edit" />
-                    <button type="button" class="delete_word">Удалить слово</button>
+                    <button type="button" class="delete_word btn">Удалить слово</button>
                 </div>
             {% endfor %}
-            <button type="button" class="add_word">Добавить слово</button>
+            <br>
+            <button type="button" class="add_word btn">Добавить слово</button>
 
         </div>
 
@@ -85,9 +86,9 @@
         <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
     </div>
 
-    <button type="button" class="cardside_up">Вверх</button>
-    <button type="button" class="cardside_down">Вниз</button>
-    <button type="button" class="delete_side">Удалить сторону</button>
+    <button type="button" class="cardside_up btn2">Вверх</button>
+    <button type="button" class="cardside_down btn2">Вниз</button>
+    <button type="button" class="delete_side btn2">Удалить </button>
 
 
 </div>

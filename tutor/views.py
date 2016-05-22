@@ -77,6 +77,7 @@ class TutorGroupsList(LoginRequiredMixin, View):
         for row in c.n1ql_query(nq1):
             ir = row['nihongo']
             ir['id'] = row['id']
+            ir['group_name'] = 'Первая группа'
             inc_requests.append(ir)
 
         """nq = N1QLQuery('SELECT *, META().id FROM `nihongo` WHERE doc_type=$doc_type and tutor_uid=$tutor_uid', tutor_uid = user_uid, doc_type='group_doc')

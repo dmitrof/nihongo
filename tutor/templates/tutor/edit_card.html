@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 <h3>Карточка "{{card.doc_name}}"</h3>
-<a href="{% url 'tutor:deck_detail' group_id deck_id %}">Назад к колоде </a>
+<a href="{% url 'tutor:deck_detail' group_id deck_id %}" class="btn">Назад к колоде </a>
 <div id="edit_pane">
 
 <form class="card_form" action="{% url 'tutor:edit_card' group_id deck_id card_id %}" method="post">

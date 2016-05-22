@@ -3,31 +3,51 @@
 {%load staticfiles%}
 
 {% block tutor %}
-<link rel="stylesheet" type="text/css" href="{% static 'tutor/style.css' %}" />
-<p>Группы преподавателя  <b>{{tutor_doc.username}}</b></p>
+<!--<link rel="stylesheet" type="text/css" href="{% static 'tutor/style.css' %}" />-->
+
 <br>
 <br>
+<div class="manage_groups">
+<div class="tutor_groups">
+    <h5><p>Группы преподавателя  <b>{{tutor_doc.username}}</b></p></h5>
 {% for group in groups_list %}
 
-<div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
-    Описание:  <b>{{group.decks_list|length}}</b>   <br>
-    Количество стопок карточек:    <b>{{group.decks_list|length}}</b>     <br>
-    <a href="{% url 'tutor:group_decks' group.id %}">К списку колод</a><br>
-    <form name="delete_group" method="post" action="{% url 'tutor:tutor_groups'%}">
-        {% csrf_token %}
-        <input type="hidden" name="group_id" value="{{group.id}}" />
-        <input type="submit" name="delete_group" value="Удалить" />
-    </form>
+    <div class="group_menu_item">Группа: <b>{{group.group_name}}</b>  <br>
+        Описание:  <b>{{group.description}}</b>   <br>
+        Количество стопок карточек:    <b>{{group.decks_list|length}}</b>     <br>
+        <a href="{% url 'tutor:group_decks' group.id %}" class="btn">К списку колод</a><br>
+        <form name="delete_group" method="post" action="{% url 'tutor:tutor_groups'%}">
+            {% csrf_token %}
+            <input type="hidden" name="group_id" value="{{group.id}}" />
+            <input type="submit" class="btn" name="delete_group" value="Удалить" />
+        </form>
 
-</div>
-<br>
-
-<!-- Заявки и приглашения-->
+    </div>
 {% endfor%}
 
-{% for ir in inc_requests %}
-    <div class="inc_request_item">
-        Запрос от {{ir.user_id}}:
+<br>
+<form action="{% url 'tutor:tutor_groups' %}" class="new_group_form" name="create_group" method="post">
+    Создать новую группу<br>
+    {% csrf_token %}
+    <label>
+        Название/номер группы<br><input type="text" name="group_name"/>
+    </label>
+    <label>
+        Описание группы<br><input type="text" name="group_description"/>
+    </label>
+    <input type="submit" name="create_group" value="Создать"/>
+
+</form>
+
+</div>
+
+
+<!-- Заявки и приглашения-->
+<div class="ir_pane">
+    <h5><p>Запросы на вступление в группу:</p></h5>
+    {% for ir in inc_requests %}
+    <div class="ir_item">
+        Запрос от <b>{{ir.user_id}}</b> о вступлении в группу <b>"{{ir.group_name}}"</b>:
 
         <div class="request_text">
             {{ir.request_text}}
@@ -40,24 +60,17 @@
         </form>
     </div>
 {% endfor %}
+</div>
+    </div>
+
+
 
 <br>
 
-Создать новую группу
-<br><br>
-<form action="{% url 'tutor:tutor_groups' %}" name="create_group" method="post">
-    {% csrf_token %}
-    <label>
-        Название/номер группы<br><input type="text" name="group_name"/>
-    </label><br>
-    <label>
-        Описание группы<br><input type="text" name="group_description"/>
-    </label><br>
-    <input type="submit" name="create_group" value="Создать"/>
 
-</form>
 
 <br>
+
 {% include 'tutor/attendable_groups.html' %}
 
 {% endblock %}

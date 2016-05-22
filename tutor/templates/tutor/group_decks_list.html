@@ -5,17 +5,17 @@
 {% block tutor %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-<p>Стопки группы <b>{{group}}</b></p>
 <br>
-<br>
+<h4><p>Колоды группы <b>"{{group}}"</b></p></h4>
+
 {% for deck in decks_list %}
-<div class="deck_menu_item">Номер стопки: <b>{{deck.key}}</b>  <br>
+<div class="deck_menu_item">Колода: <b>{{deck.value.deck_name}}</b>  <br>
     Описание:  <b>{{deck.value.description}}</b>   <br>
     Количество карточек:    <b>{{deck.value.cards_list|length}}</b>     <br>
-    <a href="{% url 'tutor:deck_detail' group_id deck.key %}">{{deck.key}} </a>
+    <a href="{% url 'tutor:deck_detail' group_id deck.key %}" class="btn">Редактировать</a>
     <form name="delete_deck" method="post" action="{% url 'tutor:group_decks_delete' group_id deck.key %}">
         {% csrf_token %}
-    <input type="submit" value="Delete" />
+    <input type="submit" value="Удалить" />
 </form>
 </div>
 
@@ -23,10 +23,11 @@
 {% endfor%}
 
 
-<form action="{% url 'tutor:group_decks' group_id %}" method="post">
+<form action="{% url 'tutor:group_decks' group_id %}" class="new_deck_form" method="post">
+    <h5>Добавить новую колоду</h5>
     {% csrf_token %}
     <input type="text" name="description" id="desc_field"/>
-    <input type="submit" value="add_deck"/>
+    <input type="submit" value="Добавить"/>
 </form>
 {% if success == "fail" %}
 <h3 class="transact_status">{{success}}</h3>
