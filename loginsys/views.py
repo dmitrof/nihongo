@@ -49,7 +49,7 @@ def register(request):
                 username = newuser_form.cleaned_data['username']
                 password = newuser_form.cleaned_data['password2']
                 c_username = 'user_' + username
-                new_user = {'username' : c_username, 'password' : password, 'login' : c_username, 'doc_type' : 'user_doc'}
+                new_user = {'username' : username, 'password' : password,  'doc_type' : 'user_doc'}
                 doc_channels = [c_username]
                 new_user['doc_channels'] = doc_channels
                 c.upsert(c_username, new_user)

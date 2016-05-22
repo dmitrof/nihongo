@@ -36,3 +36,13 @@ class Question(models.Model):
     pub_date = models.DateTimeField('date published')
     def __str__(self):
         return self.question_text
+
+class Assignment(CouchbaseModel):
+    class Meta:
+        abstract = True
+    doc_type = 'stat_doc'
+    uid_prefix = 'stat'
+    user_id = models.CharField(max_length=200)
+    card_id = models.CharField(max_length=200)
+    value = models.CharField(max_length=200)
+

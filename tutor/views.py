@@ -14,6 +14,7 @@ from uuid import uuid4
 from tutor.cardbuilder import CardBuilder
 from tutor.rules import RulesProvider
 from django_cbtools.sync_gateway import SyncGateway
+from nihongo_tutor.models import Assignment
 
 
 class TutorGroupsList(LoginRequiredMixin, View):
@@ -203,6 +204,7 @@ class GroupDecksList(LoginRequiredMixin, View):
 
             newdeck = {'doc_type' : 'deck', 'description' : description, 'deck_name' : description}
             newdeck['cards_list'] = []
+            newdeck['doc_channels'] = [group_id]
             c.insert(ckey, newdeck)
             group = c.get(group_id).value
             print(group.get('decks_list'))
@@ -460,8 +462,22 @@ def get_chunk(request):
                                            'available_pages' : availablePages, 'cardside' : cardside, 'lvl' : lvl, 'task_types' : task_types})
 
 
-
-
+@login_required()
+def put_assignment(request, user_id, card_id, value):
+    #получаем id текущего пользователя из сессии
+    user_uid = 'user_' + request.user.username
+    #проверяем является ли текущий пользователь тем,
+    # для кого добавляется документ
+    #если нет - возвращаем страницу с ошибкой
+    if user_uid != user_id:
+        return render(request, 'error_template',
+                      {'error' : 'restricted'})
+    assignment = Assignment()
+    assignment.user_id = user_id
+    assignment.card_id = card_id
+    assignment.value = value
+    assignment.save()
+    return HttpResponse('assignment saved!')
 
 
     """if 'name' in request.POST:

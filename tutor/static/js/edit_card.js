@@ -116,7 +116,7 @@ $(document).ready(function() {
                 //alert("now" + newId);
             }
             else {
-                alert("its okay");
+                //alert("its okay");
             }
         })
     });
