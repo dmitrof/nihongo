@@ -184,14 +184,14 @@ $(document).ready(function() {
         }).fail(function() { alert("cant reach the html file")});
     });
 
-    $('#edit_pane').on('click', '.cardside_up, .cardside_down', function() {
+    $('#edit_pane').on('click', '.cardside_up , .cardside_down', function() {
         var side_id = "#" + ($(this).closest('.edit_item').attr('id'));
         var cardside = side_id.match(/\d+/)[0];
         var new_side_number = -1;
-        if ($(this).attr('class') == 'cardside_up') {
+        if ($(this).attr('class') == 'cardside_up btn2') {
             new_side_number = cardside - 1;
         } else
-        if ($(this).attr('class') == 'cardside_down') {
+        if ($(this).attr('class') == 'cardside_down btn2') {
             new_side_number = Number.parseInt(cardside) + 1;
         }
         var side_content = $(side_id).html();

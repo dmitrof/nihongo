@@ -1,5 +1,5 @@
-<div id="edit_s{{side.cardside}}" class="edit_item">
-    {{page.pageName}}
+{% extends 'tutor/edit_card_side.html' %}
+{% block card_side %}
     <!--<div data-role="header">Kanji card!</div>-->
     <div class="singlekanji_template card_template">
         <div class="bigkanji" id="bigkanji_s{{side.cardside}}">{{side.bigkanji}}</div>
@@ -24,11 +24,7 @@
         <!--<input type="submit" name="edit_side" value="Редактировать сторону"/>-->
 
     </div>
-    <button type="button" class="cardside_up">Вверх</button>
-        <button type="button" class="cardside_down">Вниз</button>
-    <button type="button" class="delete_side">Удалить сторону</button>
-</div>
-
+{% endblock %}
 
 
 

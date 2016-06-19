@@ -1,6 +1,5 @@
-
-<div id="edit_s{{side.cardside}}" class="edit_item">
-    {{page.pageName}}
+{% extends 'tutor/edit_card_side.html' %}
+{% block card_side %}
     <div class="kanjiback_template card_template">
         <div class="kanjitrans" id="kanjitrans_s{{side.cardside}}">{{side.kanjitrans}}</div>
         <div class="romaji" id="kanjiromaji_s{{side.cardside}}">{{side.kanjiromaji}}</div>
@@ -28,9 +27,6 @@
 
 
     </div>
-    <button type="button" class="cardside_up">Вверх</button>
-        <button type="button" class="cardside_down">Вниз</button>
-    <button type="button" class="delete_side">Удалить сторону</button>
 
-</div>
+{%endblock%}
 
