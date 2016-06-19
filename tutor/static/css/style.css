@@ -4,7 +4,7 @@
     margin: 20;
 }
 
-.singlekanji_template, .kanjifront_template, .kanjiback_template {
+.singlekanji_template, .kanjifront_template, .kanjiback_template, .card_template {
 
     border: 1px solid black;
     width: 320px;
@@ -100,6 +100,11 @@ input {
     width:35%;
     /*border: 1px solid black;*/
 }
+
+.word_item_field {
+    background-color: #efefef;
+}
+
 .word_kun {
     padding-left:1%;
     width:65%;
